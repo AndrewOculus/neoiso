@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<project name="Generator" default="run">
+  <property name="src.java" location ="src"/>
+  <property name="build.dir" location="build"/>
+  <property name="lib.dir" location="lib"/>
+  <property name="build.jar" location="jar"/>
+  <property name="build.classes.java" location="${build.dir}/class/java"/>
+  
+  <path id="external.classpath">
+      <pathelement location="${lib.dir}/gson-2.9.0.jar"/>
+  </path>
+
+  <target name="make.dirs" description="Making  of the auxillary dirs" >
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.jar}"/>
+    <mkdir dir="${build.classes.java}"/>
+  </target>
+
+  <target name="compile" description="Compilation of the classes" depends="make.dirs">
+    <echo>Compilation ....</echo>  
+    <javac includeantruntime="false"  destdir="${build.classes.java}">
+      <classpath refid="external.classpath"/>
+      <src path="${src.java}"/>
+    </javac>
+  </target>
+
+  <target name="jar" description="Creating jar" depends="compile">
+    <echo>Jar ....</echo>
+    <jar destfile="${build.jar}/Generator.jar" basedir="${build.classes.java}">
+      <manifest>
+        <attribute name="Main-Class" value="com.nocompany.Generator"/>
+        <attribute name="Class-Path" value="${lib.dir}/gson-2.9.0.jar"/>
+        <attribute name="Created-By" value="(с) Enchanted Hunter"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run" description="Run application" depends="jar">
+    <echo>Running application . . . </echo>
+    <java jar="${build.jar}/Generator.jar" fork="true"/>
+  </target>
+
+</project>
