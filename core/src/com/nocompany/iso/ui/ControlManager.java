@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 
 public class ControlManager {
 
-    final float grabTimer = 0.1f;
+    final float grabTimer = 0.05f;
 
     private PressType pressType = PressType.NO_PRESS;
     private boolean prevTouch0 = false;

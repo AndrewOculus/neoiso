@@ -15,13 +15,18 @@ public class Widget {
     private LinkedList<UIButton> uiButtons = new LinkedList<>();
     private UITexture UITexture;
     private OrthographicCamera camera;
+    private boolean isShow;
 
     public Widget( UITexture UITexture, OrthographicCamera camera ){
         this.UITexture = UITexture;
         this.camera = camera;
+        isShow = true;
     }
 
     public void draw ( SpriteBatch batch ){
+        if( !isShow )
+            return;
+
         batch.draw( UITexture.getTexture(), UITexture.getX(), UITexture.getY(), UITexture.getSizeX(), UITexture.getSizeY() );
 
         for( UIButton button : uiButtons ){
@@ -67,6 +72,13 @@ public class Widget {
             boolean isTouch = button.isTouch( tx, ty );
             if( isTouch ){
                 System.out.println( button.getDescription() );
+
+                switch( button.getDescription() ){
+                    case "Close":
+                        isShow = false;
+                    break;
+                }
+
                 return true;
             }
         }
@@ -74,6 +86,9 @@ public class Widget {
     }
 
     public boolean isTouched ( float px, float py, OrthographicCamera camera ){
+
+        if( !isShow )
+            return false;
 
         float tx = px - Gdx.graphics.getWidth()/2 ;
         float ty = py - Gdx.graphics.getHeight()/2 ;

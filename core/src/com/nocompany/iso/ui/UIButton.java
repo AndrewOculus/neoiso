@@ -115,8 +115,6 @@ public class UIButton{
         float offsetX = windowsOffsetX + buttonOffsetX * windowsSizeX;
         float offsetY = windowsOffsetY + buttonOffsetY * windowsSizeY;
 
-        // System.out.println( offsetX + " " + offsetY );
-
         if( isTouch )
             spriteBatch.draw( press, offsetX, offsetY, buttonSizeX * orthographicCamera.viewportWidth, buttonSizeY * orthographicCamera.viewportWidth );
         else
