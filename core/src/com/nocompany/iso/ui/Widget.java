@@ -12,39 +12,41 @@ import java.util.LinkedList;
 
 public class Widget {
 
-    private Texture texture;
+    private LinkedList<UIButton> uiButtons = new LinkedList<>();
     private UITexture UITexture;
-    private LinkedList<UIButton> uiButtons;
+    private OrthographicCamera camera;
 
-    public Widget( UITexture UITexture ){
-        this.texture = UITexture.getTexture();
+    public Widget( UITexture UITexture, OrthographicCamera camera ){
         this.UITexture = UITexture;
-        this.uiButtons = new LinkedList<>();
+        this.camera = camera;
     }
 
     public void draw ( SpriteBatch batch ){
-        batch.draw( texture, UITexture.getX(), UITexture.getY(), UITexture.getSizeX(), UITexture.getSizeY() );
+        batch.draw( UITexture.getTexture(), UITexture.getX(), UITexture.getY(), UITexture.getSizeX(), UITexture.getSizeY() );
 
         for( UIButton button : uiButtons ){
             button.draw( batch );
         }
     }
 
-    public void debugDraw ( ShapeRenderer shapeRenderer ){
-        for( UIButton button: uiButtons ){
-            button.setWindowsOffset( UITexture.getX(), UITexture.getY() );
-            button.debugDraw( shapeRenderer );
+    public void update (){
+        UITexture.setCamera(camera);
+        UITexture.update();
+
+        for( UIButton button : uiButtons ){            
+            button.setWindowsOffset(UITexture.getX() , UITexture.getY());
+            button.setWindowsSize( UITexture.getSizeX(), UITexture.getSizeY() );
         }
     }
 
-    public void update ( OrthographicCamera camera ){
-        UITexture.setCamera(camera);
-        UITexture.update();
-    }
+    public void setPos ( float x, float y){
+        UITexture.setX(x);
+        UITexture.setY(y);
 
-    public void setPos ( float x, float y ){
-        UITexture.setX(x - Gdx.graphics.getWidth()/2);
-        UITexture.setY(y - Gdx.graphics.getHeight()/2);
+        for( UIButton button : uiButtons ){
+            button.setWindowsOffset(x, y);
+            button.setWindowsSize( UITexture.getSizeX(), UITexture.getSizeY() );
+        }
     }
 
     public UITexture uiTexture (){
@@ -52,6 +54,7 @@ public class Widget {
     }
 
     public void addUIButton ( UIButton uiButton ){
+        uiButton.setWindowsOffset( UITexture.getX() , UITexture.getY() );
         this.uiButtons.add(uiButton);
     }
 

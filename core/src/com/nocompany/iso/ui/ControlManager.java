@@ -8,10 +8,10 @@ public class ControlManager {
 
     final float grabTimer = 0.1f;
 
+    private PressType pressType = PressType.NO_PRESS;
     private boolean prevTouch0 = false;
     private boolean nextTouch0 = false;
     private float pressTimer = 0;
-    private PressType pressType = PressType.NO_PRESS;
 
     public ControlManager(){
 

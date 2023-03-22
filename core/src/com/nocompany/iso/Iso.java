@@ -107,25 +107,27 @@ public class Iso extends ApplicationAdapter {
 		shapeRenderer2 = new ShapeRenderer();
 		networkMove = new NetworkMove( objectsRenderer );
 
-		userInterface = new UserInterface();
-
-
+		OrthographicCamera camera1 = new OrthographicCamera();
+		camera1.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
+		userInterface = new UserInterface(camera1);
 
 		userInterface.addWidget( 
 			new Widget( 
-				new UITexture( AssetLoader.GetInstance().uiPanel, SizeType.OnlyWidth, 1.0f, 1.0f, -0.5f, -0.5f )
+				new UITexture( AssetLoader.GetInstance().uiPanel, SizeType.OnlyWidth, 1.0f, 1.0f, -0.5f, -0.5f ),
+				camera1
 			)
 		);
 
 		UIButton uiButton = new UIButton.UIButtonBuilder()
-			.setButtonSize(15, 15)
-			.setButtonOffset(142, 144)
+			.setButtonSize(0.025f, 0.025f)
+			.setButtonOffset(0.9f, 0.86f)
 			.setDescription("Close")
+			.setCamera(camera1)
 			.setIdle( AssetLoader.GetInstance().uiCloseBtnIdle )
 			.setPress( AssetLoader.GetInstance().uiCloseBtnPress )
 			.build();
 
-		Widget widget = new Widget( new UITexture( AssetLoader.GetInstance().uiInventory, SizeType.OnlyWidth, 0.25f, 0.25f, -0.35f, -0.0f ));
+		Widget widget = new Widget( new UITexture( AssetLoader.GetInstance().uiInventory, SizeType.OnlyWidth, 0.25f, 0.25f, -0.35f, -0.0f ), camera1);
 		widget.addUIButton(uiButton);
 		userInterface.addWidget(widget);
 

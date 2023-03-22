@@ -67,6 +67,4 @@ public class UITexture {
     public Texture getTexture(){
         return texture;
     }
-
 }
-

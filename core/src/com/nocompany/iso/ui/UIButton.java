@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.Gdx;
 
+
 public class UIButton{
 
     public enum UIButtonType{
@@ -13,12 +14,14 @@ public class UIButton{
 
     public static class UIButtonBuilder{
         
-        private static UIButtonType buttonType;
+        private static OrthographicCamera orthographicCamera;
         private static float windowsOffsetX, windowsOffsetY;
         private static float buttonOffsetX, buttonOffsetY;
         private static float buttonSizeX, buttonSizeY;
-        private static String description;
+        private static float windowsSizeX, windowsSizeY;
+        private static UIButtonType buttonType;
         private static Texture idle, press;
+        private static String description;
 
         public UIButtonBuilder(){
             windowsOffsetX = 0;
@@ -29,6 +32,7 @@ public class UIButton{
             buttonSizeY = 1;
             idle = null;
             press = null;
+            orthographicCamera = null;
         }
 
         public UIButtonBuilder setDescription( String description ){
@@ -69,8 +73,14 @@ public class UIButton{
             return this;
         }
 
+        public UIButtonBuilder setCamera( OrthographicCamera orthographicCamera ){
+            this.orthographicCamera = orthographicCamera;
+            return this;
+        }
+
         public UIButton build(){
             UIButton button = new UIButton();
+            button.orthographicCamera = orthographicCamera;
             button.windowsOffsetX = windowsOffsetX;
             button.windowsOffsetY = windowsOffsetY;
             button.buttonOffsetX = buttonOffsetX;
@@ -85,46 +95,56 @@ public class UIButton{
         }
     }
 
-    private UIButtonType buttonType;
+    private OrthographicCamera orthographicCamera;
     private float windowsOffsetX, windowsOffsetY;
     private float buttonOffsetX, buttonOffsetY;
     private float buttonSizeX, buttonSizeY;
-    private String description;
+    private float windowsSizeX, windowsSizeY;
+
+    private UIButtonType buttonType;
     private Texture idle, press;
+    private String description;
     private boolean isTouch;
 
     public UIButton(){
 
+    }
+        
+    public void draw( SpriteBatch spriteBatch ){
+        
+        float offsetX = windowsOffsetX + buttonOffsetX * windowsSizeX;
+        float offsetY = windowsOffsetY + buttonOffsetY * windowsSizeY;
+
+        // System.out.println( offsetX + " " + offsetY );
+
+        if( isTouch )
+            spriteBatch.draw( press, offsetX, offsetY, buttonSizeX * orthographicCamera.viewportWidth, buttonSizeY * orthographicCamera.viewportWidth );
+        else
+            spriteBatch.draw( idle, offsetX, offsetY, buttonSizeX * orthographicCamera.viewportWidth, buttonSizeY * orthographicCamera.viewportWidth );
+        
+        isTouch = false;
     }
 
     public void setWindowsOffset( float x, float y ){
         this.windowsOffsetX = x;
         this.windowsOffsetY = y;
     }
-        
-    public void draw( SpriteBatch spriteBatch ){
-        float offsetX = windowsOffsetX + buttonOffsetX;
-        float offsetY = windowsOffsetY + buttonOffsetY;
-        if( isTouch )
-            spriteBatch.draw( press, offsetX, offsetY, buttonSizeX, buttonSizeY );
-        else
-            spriteBatch.draw( idle, offsetX, offsetY, buttonSizeX, buttonSizeY );
-        isTouch = false;
 
+    public void setWindowsSize( float x, float y ){
+        this.windowsSizeX = x;
+        this.windowsSizeY = y;
     }
 
-    public void debugDraw( ShapeRenderer shapeRenderer ){
-        // float offsetX = windowsOffsetX + buttonOffsetX;
-        // float offsetY = windowsOffsetY + buttonOffsetY;
-        // shapeRenderer.rect( offsetX, offsetY, buttonSizeX, buttonSizeY );
+    public void setCamera( OrthographicCamera orthographicCamera ){
+        this.orthographicCamera = orthographicCamera;
     }
 
     public boolean isTouch(float x, float y){
 
-        float offsetX = windowsOffsetX + buttonOffsetX;
-        float offsetY = windowsOffsetY + buttonOffsetY;
+        float offsetX = windowsOffsetX + buttonOffsetX * windowsSizeX;
+        float offsetY = windowsOffsetY + buttonOffsetY * windowsSizeY;
 
-        if( x > offsetX && y > offsetY && x < offsetX + buttonSizeX &&  y < offsetY + buttonSizeY ){
+        if( x > offsetX && y > offsetY && x < offsetX + buttonSizeX * orthographicCamera.viewportWidth &&  y < offsetY + buttonSizeY * orthographicCamera.viewportWidth ){
             isTouch = true;
             return true;
         }

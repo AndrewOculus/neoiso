@@ -2,30 +2,27 @@ package com.nocompany.iso.ui;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.*;
+import com.nocompany.iso.ui.*;
+import com.badlogic.gdx.Gdx;
 
 import java.util.LinkedList;
 import com.nocompany.iso.ui.Widget;
 
 public class UserInterface {
 
-    LinkedList<Widget> widgets;
+    LinkedList<Widget> widgets = new LinkedList<Widget>();
     ControlManager controlManager;
     OrthographicCamera camera;
     SpriteBatch batch; 
-    ShapeRenderer shapeRenderer;
 
-    public UserInterface(){
-        widgets = new LinkedList<Widget>();
-        camera = new OrthographicCamera();
+    public UserInterface(OrthographicCamera camera){
+        
+        this.camera = camera;
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 		camera.position.set(0, 0, 0);
         camera.update();
-
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(camera.combined);
 
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
@@ -39,16 +36,10 @@ public class UserInterface {
             widget.draw(batch);
         }
         batch.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for( Widget widget: widgets ){
-            widget.debugDraw(shapeRenderer);
-        }
-        shapeRenderer.end();
     }
 
     public void addWidget( Widget widget ){
-        widget.update(camera);
+        widget.update();
         widgets.add( widget );
     }
 
@@ -64,7 +55,6 @@ public class UserInterface {
 
             grabWidget = null;
 
-            // System.out.println("" + px + " " + py);
             int idx = 0;
             for( Widget widget: widgets ){
                 boolean touch = widget.isTouched(px, py, camera);
@@ -87,11 +77,10 @@ public class UserInterface {
 
         if( controlManager.getPress() == PressType.GRAB && grabWidget != null ){
             System.out.println("Grab window");
-            grabWidget.setPos( Gdx.input.getX() + offsetX, Gdx.graphics.getHeight() - Gdx.input.getY() + offsetY );
+            grabWidget.setPos( Gdx.input.getX() + offsetX - Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight() - Gdx.input.getY() + offsetY - Gdx.graphics.getHeight()/2 );
         }
 
         controlManager.update(dt);
-        // System.out.println(  ); 
     }
 
 }
