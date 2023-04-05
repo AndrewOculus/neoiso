@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.lwjgl.Sys;
 
@@ -205,6 +206,18 @@ public class Grid {
     public void storeAsIs(){
         try{
             FileOutputStream out = new FileOutputStream("map//"+"raw_"+posX+"_"+posY);
+            out.write(data);
+            out.close();
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+    }
+
+    public void release(){
+        try{
+            FileOutputStream out = new FileOutputStream("map//"+"raw_"+posX+"_"+posY);
+            out.write(ByteBuffer.allocate(4).putInt(4096).array());
+            out.write(ByteBuffer.allocate(4).putInt(4096).array());
             out.write(data);
             out.close();
         } catch (IOException e) {

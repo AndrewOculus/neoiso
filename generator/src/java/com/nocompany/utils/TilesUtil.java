@@ -29,6 +29,7 @@ public class TilesUtil {
         byte thirdByte = (byte)firstMode;
         byte fourthByte = (byte)secondMode;
 
+        // return (int)( fourthByte << 24 | thirdByte << 16 | secondByte << 8 | firstByte );
         return (int)( firstByte << 24 | secondByte << 16 | thirdByte << 8 | fourthByte );
     }
 

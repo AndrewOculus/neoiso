@@ -123,6 +123,7 @@ public class Generator {
                 }
             }
 
+
             grid.drop();
         }
     }
@@ -224,7 +225,9 @@ public class Generator {
                         idx++;
                     }
         
-                    makeImage(grid);
+                    makeImage(grid, 0);
+                    makeImage(grid, 1);
+                    makeImage(grid, 2);
         
                     grid.drop();
             //     }
@@ -330,7 +333,10 @@ public class Generator {
                 idx++;
             }
 
-            makeImage(grid);
+            // makeImage(grid);
+                        makeImage(grid, 0);
+            makeImage(grid, 1);
+            makeImage(grid, 2);
             grid.drop();
         }
 
@@ -366,8 +372,9 @@ public class Generator {
 
                     int cell = grid.getCell(x + i, y + j);
 
-                    byte fir = (byte)TilesUtil.getFirstTileMode(cell);
-                    byte sec = (byte)TilesUtil.getSecondTileMode(cell);
+                    byte fir = (byte)TilesUtil.getFirstTileType(cell);
+                    byte sec = (byte)TilesUtil.getSecondTileType(cell);
+                    // byte thr = (byte)TilesUtil.getThirdTileType(cell);
 
                     // byte fir = (byte)(cell >> 24 & 0x0F);
                     // byte sec = (byte)(cell >> 16 & 0x0F);
@@ -384,18 +391,25 @@ public class Generator {
         }
     }
 
-    static void makeImage( Grid grid ){
+    static void makeImage( Grid grid, int layer ){
         System.out.println("Make image");
 
         BufferedImage minimap = new BufferedImage( grid.getSizeX() , grid.getSizeY() , BufferedImage.TYPE_INT_RGB);
-        File minimapFile = new File("./map/"+grid.getPosX()+"_"+grid.getPosY()+".png");
+        File minimapFile = new File("./map/"+grid.getPosX()+"_"+grid.getPosY()+"_"+layer+".png");
 
         for(int y = 0; y < grid.getSizeY(); y++){
             for(int x = 0; x < grid.getSizeX(); x++){
                 
                 int cell = grid.getCellLocal(x, y);
                 // byte head = (byte)(cell >> 24 & 0x0F);
-                byte head = (byte)TilesUtil.getFirstTileType(cell);
+                byte head;
+                if( layer == 0 ){
+                    head = (byte)TilesUtil.getFirstTileType(cell);
+                }else if(layer == 1){
+                    head = (byte)TilesUtil.getSecondTileType(cell);
+                }else{
+                    head = (byte)TilesUtil.getThirdTileType(cell);
+                }
                 // System.out.println((int)head + " " + x + " " + y + " " + grid.getPosX() + " " + grid.getPosY());
 
                 if( head > 11 )
@@ -505,8 +519,11 @@ public class Generator {
                 }
             }
 
-            makeImage(grid);
+            makeImage(grid, 0);
+            makeImage(grid, 1);
+            makeImage(grid, 2);
 
+            // grid.release();
             grid.drop();
         }
     }
@@ -581,15 +598,15 @@ public class Generator {
                     );
 
                     short secMode = correctModesGrids( settings, random, 
-                        TilesUtil.getFirstTileType(cell), 
-                        TilesUtil.getFirstTileType(cells[0]),
-                        TilesUtil.getFirstTileType(cells[1]),
-                        TilesUtil.getFirstTileType(cells[2]),
-                        TilesUtil.getFirstTileType(cells[3]),
-                        TilesUtil.getFirstTileType(cells[4]),
-                        TilesUtil.getFirstTileType(cells[5]),
-                        TilesUtil.getFirstTileType(cells[6]),
-                        TilesUtil.getFirstTileType(cells[7])
+                        TilesUtil.getSecondTileType(cell), 
+                        TilesUtil.getSecondTileType(cells[0]),
+                        TilesUtil.getSecondTileType(cells[1]),
+                        TilesUtil.getSecondTileType(cells[2]),
+                        TilesUtil.getSecondTileType(cells[3]),
+                        TilesUtil.getSecondTileType(cells[4]),
+                        TilesUtil.getSecondTileType(cells[5]),
+                        TilesUtil.getSecondTileType(cells[6]),
+                        TilesUtil.getSecondTileType(cells[7])
                     );
 
                     int finalCell = TilesUtil.setCell(TilesUtil.getFirstTileType(cell), TilesUtil.getSecondTileType(cell), TilesUtil.getThirdTileType(cell), firMode, secMode );
@@ -597,7 +614,8 @@ public class Generator {
                 }
             }
 
-            grid.storeAsIs();
+            grid.release();
+            // grid.storeAsIs();
             grid.drop();
         }
     }

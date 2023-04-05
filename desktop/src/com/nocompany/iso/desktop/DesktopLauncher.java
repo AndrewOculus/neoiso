@@ -10,6 +10,8 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.samples = 4;
 		config.vSyncEnabled = true;
+		config.width = 800;
+		config.height = 600;
 		new LwjglApplication(new Iso(), config);
 		// new LwjglApplication(new TilesFitting3(), config);
 	}
