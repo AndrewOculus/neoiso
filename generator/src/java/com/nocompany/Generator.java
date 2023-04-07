@@ -54,17 +54,19 @@ public class Generator {
         loadTilesDisposer("./assets/tiles_disposer2.json", settings);
         loadTilesVariants("./assets/tiles_variants.json", settings);
 
-        Mixer mixer = new Mixer(random);
-        mixer.addLayer(Cell.LEAF, 100.0f, 0.71f);
-        mixer.addLayer(Cell.HEARTH, 700.0f, 0.61f);
-        mixer.addLayer(Cell.CLAY, 100.0f, 0.71f);
-        mixer.addLayer(Cell.HEARTH, 200.0f, 0.45f);
-        mixer.addLayer(Cell.MOOR, 100.0f, 0.61f);
+        Mixer mixer = new Mixer(
+            new GlobalLayer[]{
+                new GlobalLayer(Cell.LEAF, true),
+                new GlobalLayer(Cell.HEARTH, settings.seed + 0, 700.0f, 0.61f),
+                new GlobalLayer(Cell.CLAY, settings.seed + 1,   100.0f, 0.71f),
+                new GlobalLayer(Cell.MOOR, settings.seed + 2,   100.0f, 0.61f)
+            }
+        );
         
         makeGrids( grids, random, settings, mixer );
         makeSandAndRiversAndLakes( grids, random, settings );
-        correctGrids( grids, settings );
-        makeModesGrids( grids, settings, random );
+        // correctGrids( grids, settings );
+        // makeModesGrids( grids, settings, random );
     }
 
     static void loadTilesDisposer( String path, Settings settings ){
@@ -86,19 +88,19 @@ public class Generator {
     }
 
     static void makeGrids( HashMap<String, Grid> gridsHashMap, Random random, Settings settings, Mixer mixer ){
-        
+
         for(int y = 0 ; y < settings.gridsY ; ++y){
             for(int x = 0 ; x < settings.gridsX ; ++x){
-                gridsHashMap.put(x+"_"+y, new Grid(x, y, settings.gridSizeX, settings.gridSizeY, 16, 32));
+                gridsHashMap.put(x+"_"+y, new Grid(x, y, settings.gridSizeX, settings.gridSizeY, 16, 32, mixer.getCells()));
             }
         }
-        
+
         if( settings.skipInit )
         {
             for(Map.Entry<String, Grid> entry : gridsHashMap.entrySet()) {
 
                 Grid grid = entry.getValue();
-                grid.Init();
+                // grid.Init();
             }
             return;    
         }
@@ -116,15 +118,24 @@ public class Generator {
             int startY = grid.getPosY() * settings.gridSizeY;
             int stopY = (grid.getPosY() + 1) * settings.gridSizeY;
 
-            for(int y = startY ; y < stopY ; ++y){
-                for(int x = startX ; x < stopX ; ++x){
-                    int cell = mixer.getCell(x, y);
-                    grid.setCell(x, y, cell);
+            for( int layer = 0 ; layer < grid.getLayersCount() ; ++layer ){
+                for(int y = startY ; y < stopY ; ++y){
+                    for(int x = startX ; x < stopX ; ++x){
+                        boolean cell = mixer.getCell(x, y, layer);
+                        grid.getLayer(layer).setCell(x, y, (cell ? new Byte((byte)0): null) );
+                    }
                 }
             }
 
-
+            // makeImagesGrid( grid );
+            // drawGrid( grid );
+            // drawGrid( grid );
+            // System.out.println( grid.getLayer(0).getMatrix() );
             grid.drop();
+            // System.out.println( grid.getLayer(0).getMatrix() );
+            // grid.read();
+            // System.out.println( grid.getLayer(0).getMatrix() );
+
         }
     }
 
@@ -197,7 +208,7 @@ public class Generator {
                 double waterSize = random.nextDouble();
 
                 sizePointsToWater.get(pointsToDraw.size() - 1).add((int) (waterSize * 5.0 + 25 + integr));
-                sizePointsToDeepWater.get(pointsToDraw.size() - 1).add((int) (waterSize * 2.5 + 20 + integr));
+                sizePointsToDeepWater.get(pointsToDraw.size() - 1).add((int) (waterSize * 4.5 + 23 + integr));
                 sizePointsToSand.get(pointsToDraw.size() - 1).add( (int) (waterSize * 3.5 + 25 + integr + ((random.nextDouble() > 0.999) ? 40 * random.nextDouble() : 0)) );
                 i++;
             }
@@ -217,17 +228,19 @@ public class Generator {
             //     public void run() {
                     Grid grid = entry.getValue();
                     grid.read();
+                    Layer sand = grid.addLayer(Cell.SAND);
                     int idx = 0;
         
                     for (Edge e : diagram.edges.subList(5, diagram.edges.size() - 1)) {
                         if (dropEdges.get(idx))
-                            drawLine( grid, pointsToDraw.get(idx), sizePointsToSand.get(idx), Cell.SAND);
+                            drawLine( sand, pointsToDraw.get(idx), sizePointsToSand.get(idx), grid.getPosX(), grid.getPosY() );
                         idx++;
                     }
         
-                    makeImage(grid, 0);
-                    makeImage(grid, 1);
-                    makeImage(grid, 2);
+                    // makeImage(grid, 0);
+                    // makeImage(grid, 1);
+                    // makeImage(grid, 2);
+                    // drawGrid(grid);
         
                     grid.drop();
             //     }
@@ -245,11 +258,13 @@ public class Generator {
 
             Grid grid = entry.getValue();
             grid.read();
+            Layer water = grid.addLayer(Cell.WATER);
+
             int idx = 0;
 
             for (Edge e : diagram.edges.subList(5, diagram.edges.size() - 1)) {
                 if (dropEdges.get(idx))
-                    drawLine( grid, pointsToDraw.get(idx), sizePointsToWater.get(idx), Cell.WATER);
+                    drawLine( water, pointsToDraw.get(idx), sizePointsToWater.get(idx), grid.getPosX(), grid.getPosY());
                 idx++;
             }
 
@@ -284,10 +299,12 @@ public class Generator {
 
             Grid grid = entry.getValue();
             grid.read();
+            Layer water = grid.getLayer( grid.getLayersCount() - 1 );
+
             int idx = 0;
 
             for ( Vector l : lakes) {
-                drawCircle(grid, (int) l.x, (int) l.y, (int) lakesSize.get(idx).x, (int) lakesSize.get(idx).y, Cell.WATER);
+                drawCircle(water, (int) l.x, (int) l.y, (int) lakesSize.get(idx).x, (int) lakesSize.get(idx).y, grid.getPosX(), grid.getPosY());
                 idx++;
             }
 
@@ -304,11 +321,12 @@ public class Generator {
 
             Grid grid = entry.getValue();
             grid.read();
+            Layer deepWater = grid.addLayer(Cell.WATER_DEEP);
             int idx = 0;
 
             for (Edge e : diagram.edges.subList(5, diagram.edges.size() - 1)) {
                 if (dropEdges.get(idx))
-                    drawLine( grid, pointsToDraw.get(idx), sizePointsToDeepWater.get(idx), Cell.WATER_DEEP);
+                    drawLine( deepWater, pointsToDraw.get(idx), sizePointsToDeepWater.get(idx), grid.getPosX(), grid.getPosY());
                 idx++;
             }
 
@@ -319,75 +337,127 @@ public class Generator {
         for(Map.Entry<String, Grid> entry : gridsHashMap.entrySet()) {
             Grid grid = entry.getValue();
             grid.read();
+            Layer deepWater = grid.getLayer( grid.getLayersCount() - 1 );
+
             int idx = 0;
 
             for (Vector l : lakes) {
                 drawCircle(
-                        grid,
+                        deepWater,
                         (int) l.x,
                         (int) l.y,
                         (int) lakesSize.get(idx).x - 15,
                         (int) lakesSize.get(idx).y - 15,
-                        Cell.WATER_DEEP
+                        grid.getPosX(),
+                        grid.getPosY()
                 );
                 idx++;
             }
 
-            // makeImage(grid);
-                        makeImage(grid, 0);
-            makeImage(grid, 1);
-            makeImage(grid, 2);
+            drawGrid(grid);
+            // makeImage(grid, 0);
+            // makeImage(grid, 1);
+            // makeImage(grid, 2);
             grid.drop();
         }
 
     }
 
-    static void drawLine( Grid grid, List<Vector> pointsToDraw, List<Integer> sizePointsToDraw, Cell cellType) {
+    static void drawLine( Layer layer, List<Vector> pointsToDraw, List<Integer> sizePointsToDraw, int posX, int posY) {
 
         int idx = 0;
         for (Vector p: pointsToDraw) {
-            drawCircle( grid, (int) p.x, (int) p.y, sizePointsToDraw.get(idx), sizePointsToDraw.get(idx), cellType);
+            drawCircle( layer, (int) p.x, (int) p.y, sizePointsToDraw.get(idx), sizePointsToDraw.get(idx), posX, posY);
             idx++;
         }
     }
 
-    static void drawCircle( Grid grid, int x, int y, int radius0, int radius1, Cell cellType) {
+    static void drawCircle( Layer layer, int x, int y, int radius0, int radius1, int posX, int posY) {
 
         if( radius0 < 8 || radius1 < 8 )
             return;
 
-        float cenX = (grid.getPosX() + 0.5f) * grid.getSizeX();
-        float cenY = (grid.getPosY() + 0.5f) * grid.getSizeY();
+        float cenX = (posX + 0.5f) * layer.getWidth();
+        float cenY = (posY + 0.5f) * layer.getHeight();
 
-        if( (cenX - x)*(cenX - x) + (cenY - y)*(cenY - y) > grid.getSizeX() * grid.getSizeX() )
+        if( (cenX - x)*(cenX - x) + (cenY - y)*(cenY - y) > layer.getWidth() * layer.getHeight() )
             return;
 
         for (int i = -radius0; i < radius0 ; ++i) {
             for (int j = -radius0; j < radius0 ; ++j) {
-
                 if( i*i + j*j <= radius0*radius0 ){
-
-                    if( !grid.probe(x + i, y + j) )
-                        continue;
-
-                    int cell = grid.getCell(x + i, y + j);
-
-                    byte fir = (byte)TilesUtil.getFirstTileType(cell);
-                    byte sec = (byte)TilesUtil.getSecondTileType(cell);
-                    // byte thr = (byte)TilesUtil.getThirdTileType(cell);
-
-                    // byte fir = (byte)(cell >> 24 & 0x0F);
-                    // byte sec = (byte)(cell >> 16 & 0x0F);
-                    // byte thr = (byte)(cell >> 8 & 0x0F);
-
-                    if( fir != cellType.getTileId() ){
-                        cell = TilesUtil.setCell(cellType.getTileId(), fir, sec, (short)0, (short)0);
-                        // cell = (cellType.getTileId() << 24) | ( fir << 16 ) | ( sec << 8 );
-                    }
-
-                    grid.setCell(x + i, y + j, cell);
+                    layer.setCell(x + i - posX * layer.getWidth(), y + j - posY * layer.getHeight() , (byte)1);
                 }
             }
+        }
+
+    }
+
+    static void makeImagesGrid( Grid grid ){
+        for( int i = 0 ; i < grid.getLayersCount() ; ++i){
+            String prefix = grid.getPosX() + "_" + grid.getPosY() + "_" + i;
+            makeImageLayer( grid.getLayer(i), prefix );
+        }
+    }
+
+    static void drawGrid( Grid grid ){
+
+        BufferedImage minimap = new BufferedImage( grid.getSizeX() , grid.getSizeY() , BufferedImage.TYPE_INT_RGB);
+        File minimapFile = new File("./map/grid"+grid.getPosX() +"_"+grid.getPosY()+".png");
+
+        for(int y = 0; y < grid.getSizeY(); y++){
+            for(int x = 0; x < grid.getSizeX(); x++){
+                for( int l = 0 ; l < grid.getLayersCount()  ; ++l ){
+                    
+                    Cell cell = grid.getLayer(l).getCell(x, y) != null ? grid.getLayer(l).getType() : null;
+
+                    if( cell != null ){
+                        if( cell.getTileId() != Cell.EMPTY.getTileId() ){
+                            int rgb = (255<<24) & 0xff000000|
+                            (cell.getB() << 16) & 0x00ff0000|
+                            (cell.getG() << 8)  & 0x0000ff00|
+                            (cell.getR() << 0)  & 0x000000ff;
+                            minimap.setRGB(x, grid.getSizeY() - y - 1, rgb );
+                        }
+                    }
+                }
+            }
+        }
+
+        try {
+            ImageIO.write(minimap, "PNG", minimapFile);
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+
+    }
+
+    static void makeImageLayer( Layer layer, String prefix ){
+        System.out.println("Make image");
+
+        BufferedImage minimap = new BufferedImage( layer.getWidth() , layer.getHeight() , BufferedImage.TYPE_INT_RGB);
+        File minimapFile = new File("./map/"+prefix+".png");
+
+        for(int y = 0; y < layer.getHeight(); y++){
+            for(int x = 0; x < layer.getWidth(); x++){
+                
+                Byte cell = layer.getCell(x, y);
+
+                byte img = (cell == null) ? (byte)255 : (byte)0;
+
+                int rgb = (255<<24)&0xff000000|
+                (img << 16)&0x00ff0000|
+                (img << 8)&0x0000ff00|
+                (img << 0)&0x000000ff;
+
+                minimap.setRGB(x, layer.getHeight() - y - 1, rgb );
+            }
+        }
+
+        try {
+            ImageIO.write(minimap, "PNG", minimapFile);
+        } catch (IOException e) {
+            System.err.println(e);
         }
     }
 

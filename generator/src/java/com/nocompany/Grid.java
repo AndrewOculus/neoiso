@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import java.util.ArrayList;
+
 import org.lwjgl.Sys;
 
 import com.nocompany.utils.ZipUtils;
@@ -17,6 +19,9 @@ public class Grid {
     private int posX, posY;
     private int groupSizeX, groupSizeY;
 
+    private ArrayList<Layer> layers;
+    private int layersCount;
+
     private byte[] data;
     private boolean isLoaded;
 
@@ -25,7 +30,7 @@ public class Grid {
     private byte[] array0Y = null;
     private byte[] arrayNY = null;
 
-    public Grid(int posX, int posY, int sizeX, int sizeY, int groupSizeX, int groupSizeY ){
+    public Grid(int posX, int posY, int sizeX, int sizeY, int groupSizeX, int groupSizeY, Cell[] cells ){
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.posX = posX;
@@ -33,11 +38,22 @@ public class Grid {
         this.groupSizeX = groupSizeX;
         this.groupSizeY = groupSizeY;
 
+        this.layers = new ArrayList<Layer>();
+        // this.layersCount = layers.length;
+
+        for( int i = 0 ; i < cells.length ; ++i ){
+            this.layers.add( new Layer( cells[i], sizeX, sizeY ) );
+        }
+
     }
 
     public void Init(){
-        data = new byte[sizeX*sizeY*4];
-        isLoaded = true;
+        // data = new byte[sizeX*sizeY*4];
+        // isLoaded = true;
+    }
+
+    public int getLayersCount(){
+        return layers.size();
     }
 
     public void copyCellsToFramework(){
@@ -70,72 +86,39 @@ public class Grid {
         }
     }
 
-    public int getCell( int globalCellX, int globalCellY ){
-
-        int localCellX = globalCellX % sizeX;
-        int localCellY = globalCellY % sizeY;
-
-        if(data == null){
-
-            if( localCellX == 0 ){
-                byte b0 = array0Y[ localCellY*4 + 0 ];
-                byte b1 = array0Y[ localCellY*4 + 1 ];
-                byte b2 = array0Y[ localCellY*4 + 2 ];
-                byte b3 = array0Y[ localCellY*4 + 3 ];
-        
-                int val = (int)(b0 << 24 | b1 << 16 | b2 << 8 | b3);
-        
-                return val;
-            }
-
-            if( localCellX == (sizeY-1) ){
-                byte b0 = arrayNY[ localCellY*4 + 0 ];
-                byte b1 = arrayNY[ localCellY*4 + 1 ];
-                byte b2 = arrayNY[ localCellY*4 + 2 ];
-                byte b3 = arrayNY[ localCellY*4 + 3 ];
-        
-                int val = (int)(b0 << 24 | b1 << 16 | b2 << 8 | b3);
-        
-                return val;
-            }
-
-            if( localCellY == 0 ){
-                byte b0 = arrayX0[ localCellX*4 + 0 ];
-                byte b1 = arrayX0[ localCellX*4 + 1 ];
-                byte b2 = arrayX0[ localCellX*4 + 2 ];
-                byte b3 = arrayX0[ localCellX*4 + 3 ];
-        
-                int val = (int)(b0 << 24 | b1 << 16 | b2 << 8 | b3);
-        
-                return val;
-            }
-
-            if( localCellY == (sizeX-1) ){
-                byte b0 = arrayXN[ localCellX*4 + 0 ];
-                byte b1 = arrayXN[ localCellX*4 + 1 ];
-                byte b2 = arrayXN[ localCellX*4 + 2 ];
-                byte b3 = arrayXN[ localCellX*4 + 3 ];
-        
-                int val = (int)(b0 << 24 | b1 << 16 | b2 << 8 | b3);
-        
-                return val;
-            }
-
-            return -1;
-
-        }else{
-
-            byte b0 = data[ localCellY*sizeX*4 + localCellX*4 + 0 ];
-            byte b1 = data[ localCellY*sizeX*4 + localCellX*4 + 1 ];
-            byte b2 = data[ localCellY*sizeX*4 + localCellX*4 + 2 ];
-            byte b3 = data[ localCellY*sizeX*4 + localCellX*4 + 3 ];
-    
-            int val = (int)(b0 << 24 | b1 << 16 | b2 << 8 | b3);
-    
-            return val;
-        }
-
+    public Layer getLayer(int index){
+        return layers.get(index);
     }
+
+    public Layer addLayer(Cell cell){
+        Layer layer = new Layer( cell, sizeX, sizeY );
+        layers.add( layer );
+        return layer;
+    }
+
+    public int getCell(int globalCellX, int globalCellY ){
+        return 0;
+    }
+
+    // public int getCellGlobal( int globalCellX, int globalCellY ){
+
+    //     if( posX >= globalCellX &&
+    //         posY >= globalCellY &&
+    //         posX + sizeX < globalCellX &&
+    //         posY + sizeY < globalCellY ){
+                
+    //     }else{
+    //         return -1;
+    //     }
+
+    //     int localCellX = globalCellX % sizeX;
+    //     int localCellY = globalCellY % sizeY;
+
+
+    
+    //     return val;
+        
+    // }
 
     public int getCellLocal( int localCellX, int localCellY ){
         // return data[ localCellY*sizeX + localCellX ];
@@ -183,24 +166,44 @@ public class Grid {
     }
 
     public void drop(){
+        return;
+        // copyCellsToFramework();
+        // for( int i = 0 ; i < layers.size() ; ++i ){
 
-        copyCellsToFramework();
-        try{
-            FileOutputStream out = new FileOutputStream("map//"+posX+"_"+posY);
-            byte[] bytes = ZipUtils.zipBytes(posX+"_"+posY+".zip", data );
+        //     Layer layer = layers.get(i);
 
-            out.write(bytes);
-            out.close();
+        //     try{
 
-        } catch (IOException e) {
-            System.err.println(e);
-        }
+        //         FileOutputStream out = new FileOutputStream("map//"+posX+"_"+posY+"_"+i);
 
-        isLoaded = false;
-        data = null;
-        System.gc();
+        //         byte[] store = new byte[ sizeX * sizeY ];
 
-        System.out.println("store " + posX + " " + posY);
+        //         for( int y = 0 ; y < sizeY ; ++y ){
+        //             for( int x = 0 ; x < sizeX ; ++x ){
+        //                 store[ y*sizeX + x ] = layer.getMatrix()[ y * sizeX + x ] == null ? (byte)0 : (byte)1;
+        //             }
+        //         }
+
+        //         byte[] bytes = ZipUtils.zipBytes(posX+"_"+posY+".zip", store );
+
+        //         out.write(bytes);
+        //         out.close();
+
+        //         store = null;
+
+        //     } catch (IOException e) {
+        //         System.err.println(e);
+        //     }
+        // }
+
+        // for( int i = 0 ; i < layers.size() ; ++i ){
+        //     layers.get(i).dropMatrix();
+        // }
+        // // isLoaded = false;
+        // // data = null;
+        // System.gc();
+
+        // System.out.println("store " + posX + " " + posY);
     }
 
     public void storeAsIs(){
@@ -226,27 +229,48 @@ public class Grid {
     }
 
     public void read(){
+        return;
 
-        File file = new File("map//"+posX+"_"+posY);
-        byte[] zipData = new byte[(int) file.length()];
 
-        try{
-            FileInputStream fis = new FileInputStream(file);
-            fis.read(zipData);
-        }catch( IOException e){
-            System.err.println(e);
-        }
+        // for( int i = 0 ; i < layers.size() ; ++i ){
 
-        try {
-            data = ZipUtils.unzipBytes(zipData);
-        } catch (IOException e) {
-            System.err.println(e);
-        }
+        //     Layer layer = layers.get(i);
 
-        isLoaded = true;
-        System.gc();
+        //     File file = new File("map//"+posX+"_"+posY+"_"+i);
+        //     byte[] zipData = new byte[(int) file.length()];
 
-        System.out.println("read " + posX + " " + posY);
+        //     try{
+        //         FileInputStream fis = new FileInputStream(file);
+        //         fis.read(zipData);
+        //     }catch( IOException e){
+        //         System.err.println(e);
+        //     }
+
+        //     byte[] tmp;
+        //     Byte[] byteTmp = new Byte[sizeX*sizeY]; 
+
+        //     try {
+        //         tmp = ZipUtils.unzipBytes(zipData);
+
+        //         for( int y = 0 ; y < sizeY ; ++y ){
+        //             for( int x = 0 ; x < sizeX ; ++x ){
+        //                 byteTmp[ y*sizeX + x ] = (tmp[ y*sizeX + x ] == (byte)0) ? null : new Byte((byte)0);
+        //             }
+        //         }
+        //     } catch (IOException e) {
+        //         System.err.println(e);
+        //     }
+
+
+        //     tmp = null;
+
+        //     layer.setMatrix( byteTmp );
+        // }
+
+        // isLoaded = true;
+        // System.gc();
+
+        // System.out.println("read " + posX + " " + posY);
     }
 
     public int getPosX(){
