@@ -11,8 +11,8 @@ public enum Cell {
     HEARTH((byte) 7, (byte) 75, (byte)107, (byte)55),
     MOOR((byte) 8, (byte) 125, (byte)70, (byte)55),
     SAND((byte) 9, (byte) 184, (byte)252, (byte)245),
-    WATER((byte) 10, (byte) 250, (byte)30, (byte)0),
-    WATER_DEEP((byte) 11, (byte) 255, (byte)0, (byte)0);
+    WATER((byte) 10, (byte) 255, (byte)0, (byte)0),
+    WATER_DEEP((byte) 11, (byte) 170, (byte)30, (byte)0);
 
 
     private byte tileId;

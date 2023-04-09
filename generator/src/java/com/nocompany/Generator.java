@@ -65,6 +65,7 @@ public class Generator {
         
         makeGrids( grids, random, settings, mixer );
         makeSandAndRiversAndLakes( grids, random, settings );
+        setCellsType( grids, random, settings );
         // correctGrids( grids, settings );
         // makeModesGrids( grids, settings, random );
     }
@@ -209,7 +210,7 @@ public class Generator {
 
                 sizePointsToWater.get(pointsToDraw.size() - 1).add((int) (waterSize * 5.0 + 25 + integr));
                 sizePointsToDeepWater.get(pointsToDraw.size() - 1).add((int) (waterSize * 4.5 + 23 + integr));
-                sizePointsToSand.get(pointsToDraw.size() - 1).add( (int) (waterSize * 3.5 + 25 + integr + ((random.nextDouble() > 0.999) ? 40 * random.nextDouble() : 0)) );
+                sizePointsToSand.get(pointsToDraw.size() - 1).add( (int) (waterSize * 3.5 + 20 + integr + ((random.nextDouble() > 0.9997) ? 40 * random.nextDouble() : 0)) );
                 i++;
             }
         }
@@ -346,8 +347,8 @@ public class Generator {
                         deepWater,
                         (int) l.x,
                         (int) l.y,
-                        (int) lakesSize.get(idx).x - 15,
-                        (int) lakesSize.get(idx).y - 15,
+                        (int) lakesSize.get(idx).x - 4,
+                        (int) lakesSize.get(idx).y - 4,
                         grid.getPosX(),
                         grid.getPosY()
                 );
@@ -505,6 +506,53 @@ public class Generator {
         }
     }
 
+    static void setCellsType( HashMap<String, Grid> gridsHashMap, Random random, Settings settings ){
+        System.out.println("Correct cells type");
+
+        for(Map.Entry<String, Grid> entry : gridsHashMap.entrySet()) {
+
+            Grid grid = entry.getValue();
+            grid.read();
+
+            for( int layer = 0 ; layer < grid.getLayersCount() ; ++layer ){
+                for(int y = 1 ; y < grid.getSizeX()-2 ; ++y){
+                    for(int x = 1 ; x < grid.getSizeY()-2 ; ++x){
+
+                        Layer currentLayer = grid.getLayer(layer);
+                        Byte cell = currentLayer.getCell(x, y);
+                        Byte[] cells = getCellNeibors( currentLayer, settings, x, y );
+
+                        Short correct = correctModesGrids( 
+                            settings, 
+                            random, 
+                            cell,
+                            cells[0],
+                            cells[1],
+                            cells[2],
+                            cells[3],
+                            cells[4],
+                            cells[5],
+                            cells[6],
+                            cells[7]
+                        );
+
+                        if( correct != null ){
+                            // if(correct.shortValue() != 0){
+                            //     System.out.println(correct.shortValue());
+                            // }
+                            currentLayer.setCell(x, y, new Byte((byte)correct.shortValue()));
+                        }
+                        else
+                            currentLayer.setCell(x, y, null);
+                    }
+                }
+            }
+
+            grid.release();
+        }
+
+    }
+
     static void correctGrids( HashMap<String, Grid> gridsHashMap, Settings settings ){
         System.out.println("Correct grids");
 
@@ -598,6 +646,18 @@ public class Generator {
         }
     }
 
+    static Byte[] getCellNeibors( Layer layer , Settings settings, int x, int y ){
+        Byte[] cells = new Byte[8];
+        int idx = 0;
+
+        for( Pair<Integer, Integer> pair : settings.pairs ){
+            int xx = pair.getKey();
+            int yy = pair.getValue();
+            cells[idx++] = layer.getCell(xx + x, yy + y);
+        }
+        return cells;
+    }
+
     static int[] getCellNeibors( HashMap<String, Grid> gridsHashMap , Settings settings , int globalX, int globalY ){
 
         int[] ints = new int[8];
@@ -687,6 +747,69 @@ public class Generator {
             grid.release();
             // grid.storeAsIs();
             grid.drop();
+        }
+    }
+
+    static boolean byteCmp( Byte first, Byte second ){
+
+        if( first == null && second != null ){
+            return false;
+        }
+
+        if( first != null && second == null ){
+            return false;
+        }
+
+        return true;
+    }
+
+    static Short correctModesGrids( 
+        Settings settings, Random random, Byte tile, Byte bul, Byte bl,
+        Byte bdl, Byte bu, Byte bd,
+        Byte bur, Byte br, Byte bdr ){
+
+        if( tile == null ){
+            return null;
+        }
+
+        BitSet bitField = new BitSet(8);
+
+        boolean ul  =   byteCmp(tile, bul);
+        boolean l   =   byteCmp(tile, bl);
+        boolean dl  =   byteCmp(tile, bdl);
+        boolean u   =   byteCmp(tile, bu);
+        boolean d   =   byteCmp(tile, bd);
+        boolean ur  =   byteCmp(tile, bur);
+        boolean r   =   byteCmp(tile, br);
+        boolean dr  =   byteCmp(tile, bdr);
+
+        // ul, l, dl, u, d, ur, r, dr
+
+        bitField.set(7, ul);
+        bitField.set(6, l);
+        bitField.set(5, dl);
+        bitField.set(4, u);
+        bitField.set(3, d);
+        bitField.set(2, ur);
+        bitField.set(1, r);
+        bitField.set(0, dr);
+
+        byte tilesOrder = 0x00;
+        if(bitField.toByteArray().length != 0){
+            tilesOrder = bitField.toByteArray()[0];
+        }
+
+        Short result = settings.tilesDisposer.getTile( tilesOrder );
+
+        if( result == null )
+            return new Short((short)0);
+
+        Short[] vars = settings.tileVariants.getVariants(result.shortValue());
+
+        if( vars != null ){
+            return vars[random.nextInt(vars.length)];
+        }else{
+            return result.shortValue();
         }
     }
 

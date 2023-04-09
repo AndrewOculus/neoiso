@@ -146,6 +146,19 @@ public class Grid {
         } 
     }
 
+    public void setCell( int x, int y, byte firstType, byte secondType, byte thirdType, byte firstMode, byte secondMode ){
+
+        byte firstByte = (byte)(firstType << 4 & 0xF0 | secondType & 0x0F);
+        byte secondByte = (byte)(thirdType & 0x0F);
+        byte thirdByte = (byte)firstMode;
+        byte fourthByte = (byte)secondMode;
+
+        data[ y*sizeX*4 + x*4 + 0 ] = firstByte;
+        data[ y*sizeX*4 + x*4 + 1 ] = secondByte;
+        data[ y*sizeX*4 + x*4 + 2 ] = thirdByte;
+        data[ y*sizeX*4 + x*4 + 3 ] = fourthByte;
+    }
+
     public void setCell( int globalCellX, int globalCellY, int value ){
 
         int localCellX = globalCellX - posX*sizeX;
@@ -217,6 +230,45 @@ public class Grid {
     }
 
     public void release(){
+
+        data = new byte[sizeX*sizeY*4];
+
+        for( int y = 0 ; y < sizeY ; ++y ){
+            for( int x = 0 ; x < sizeX ; ++x ){
+                int idx = 0;
+                byte[] arr = new byte[5];
+                for( int layer = layers.size() - 1 ; layer >= 0 ; --layer ){
+                    Layer currentLayer = layers.get(layer);
+
+                    if( currentLayer.getCell(x, y) != null ){
+                        // Byte type = currentLayer.getCell(x, y);
+                        // System.out.println(type);
+                        // break;
+                        Byte type = currentLayer.getCell(x, y);
+
+                        if( idx == 0 ){
+                            arr[0] = currentLayer.getType().getTileId();
+                            arr[1] = type.byteValue();
+
+                            // setCell(x, y, currentLayer.getType().getTileId(), )
+                            idx++;
+                        }else if( idx == 1){
+                            arr[2] = currentLayer.getType().getTileId();
+                            arr[3] = type.byteValue();
+
+                            idx++;
+                        }else if( idx == 2 ){
+                            arr[4] = currentLayer.getType().getTileId();
+                            break;
+                        }
+                    }
+                }
+
+                setCell( x, y, arr[0], arr[2], arr[4], arr[1], arr[3] );
+
+            }
+        }
+
         try{
             FileOutputStream out = new FileOutputStream("map//"+"raw_"+posX+"_"+posY);
             out.write(ByteBuffer.allocate(4).putInt(4096).array());
