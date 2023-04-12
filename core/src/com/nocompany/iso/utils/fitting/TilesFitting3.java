@@ -79,31 +79,32 @@ public class TilesFitting3 extends ApplicationAdapter {
             e.printStackTrace();
         }
 
-        String fileName = String.format("map/%d_%d", 0, 0);
+        // String fileName = String.format("map/%d_%d", 0, 0);
 
-        byte[] bytes = Gdx.files.internal(fileName).readBytes();
-        tilesMap.put(fileName, bytes);
-        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        // byte[] bytes = Gdx.files.internal(fileName).readBytes();
+        // tilesMap.put(fileName, bytes);
+        // ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
-        int w = buffer.getInt();
-        int h = buffer.getInt();
-        int layers = buffer.getInt();
+        // int w = buffer.getInt();
+        // int h = buffer.getInt();
+        // int layers = buffer.getInt();
 
-        for (int i = 0 ; i < layers ; i ++ ){
-            bytes[i] = buffer.get();
-        }
+        // for (int i = 0 ; i < layers ; i ++ ){
+        //     bytes[i] = buffer.get();
+        // }
 
-        for(int n = 0 ; n < layers ; n++) {
-            Layer layer = new Layer(Settings.GRID_TILES_WIDTH * Settings.GRIDS_PER_FILE, Settings.GRID_TILES_HEIGHT * Settings.GRIDS_PER_FILE, CellType.values()[bytes[n]]);
-            for (int j = 0; j < Settings.GRID_TILES_HEIGHT * Settings.GRIDS_PER_FILE; j++) {
-                for (int i = 0; i < Settings.GRID_TILES_WIDTH * Settings.GRIDS_PER_FILE; i++) {
-                    layer.setTile(i, j, buffer.getShort());
-                }
-            }
-            tilesMapFromFile.add(layer);
-        }
+        // for(int n = 0 ; n < layers ; n++) {
+        //     Layer layer = new Layer(Settings.GRID_TILES_WIDTH * Settings.GRIDS_PER_FILE, Settings.GRID_TILES_HEIGHT * Settings.GRIDS_PER_FILE, CellType.values()[bytes[n]]);
+        //     for (int j = 0; j < Settings.GRID_TILES_HEIGHT * Settings.GRIDS_PER_FILE; j++) {
+        //         for (int i = 0; i < Settings.GRID_TILES_WIDTH * Settings.GRIDS_PER_FILE; i++) {
+        //             layer.setTile(i, j, buffer.getShort());
+        //         }
+        //     }
+        //     tilesMapFromFile.add(layer);
+        // }
 
-
+        tilesMapFromFile.add( new Layer( 300, 300, CellType.WATER) );
+        tilesMapFromFile.add( new Layer( 300, 300, CellType.WATER) );
 
     }
 
@@ -195,7 +196,7 @@ public class TilesFitting3 extends ApplicationAdapter {
             camera.update();
         }
 
-        CellsPack cellsPack = AssetLoader.GetInstance().getCells(10);
+        CellsPack cellsPack = AssetLoader.GetInstance().getCells(0);
 
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             // updateState(cellsPack);
@@ -208,8 +209,8 @@ public class TilesFitting3 extends ApplicationAdapter {
             }
         }
 
-        Layer layer = tilesMapFromFile.get(6);
-        CellsPack cellsPack1 = AssetLoader.GetInstance().getCells(1);
+        Layer layer = tilesMapFromFile.get(0);
+        CellsPack cellsPack1 = AssetLoader.GetInstance().getCells(2);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             nextState();
@@ -255,39 +256,39 @@ public class TilesFitting3 extends ApplicationAdapter {
                 float x = i * Settings.TILE_HEIGHT - j * Settings.TILE_HEIGHT + 1000.0f;
                 float y = (i * Settings.TILE_HEIGHT + j * Settings.TILE_HEIGHT) / 2 - 4500.0f;
 
-                if( i == selectX && j == selectY){
-                    short tile1 = (short)(91 & 0xff);
-                    Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
-                    spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
-                }
+                // if( i == selectX && j == selectY){
+                //     short tile1 = (short)(91 & 0xff);
+                //     Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
+                //     spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
+                // }
 
-                // x+1 y up
-                if( i == 3 && j == 2){
-                    short tile1 = (short)(84 & 0xff);
-                    Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
-                    spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
-                }
+                // // x+1 y up
+                // if( i == 3 && j == 2){
+                //     short tile1 = (short)(84 & 0xff);
+                //     Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
+                //     spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
+                // }
 
-                // x-1 y down
-                if( i == 1 && j == 2){
-                    short tile1 = (short)(85 & 0xff);
-                    Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
-                    spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
-                }
+                // // x-1 y down
+                // if( i == 1 && j == 2){
+                //     short tile1 = (short)(85 & 0xff);
+                //     Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
+                //     spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
+                // }
 
-                //x y-1 right
-                if( i == 2 && j == 1){
-                    short tile1 = (short)(87 & 0xff);
-                    Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
-                    spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
-                }
+                // //x y-1 right
+                // if( i == 2 && j == 1){
+                //     short tile1 = (short)(87 & 0xff);
+                //     Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
+                //     spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
+                // }
 
-                //x y+1 left
-                if( i == 2 && j == 3){
-                    short tile1 = (short)(86 & 0xff);
-                    Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
-                    spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
-                }
+                // //x y+1 left
+                // if( i == 2 && j == 3){
+                //     short tile1 = (short)(86 & 0xff);
+                //     Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
+                //     spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
+                // }
 
                 short tile = (short) (layer.getTile(j, i) & 0xff);
 
@@ -339,11 +340,7 @@ public class TilesFitting3 extends ApplicationAdapter {
                     Texture texture = AssetLoader.GetInstance().getTextureByNumber(cellsPack1, tile1);
                     // spriteBatch.draw(texture, x, y);
                     spriteBatch.draw(texture, x, y, 64, 32, 0, 0, 64, 32, false, true);
-
-                }
-
-
-                
+                }                
             }
         }
         spriteBatch.end();
@@ -385,6 +382,5 @@ public class TilesFitting3 extends ApplicationAdapter {
         }
 
         spriteBatch.end();
-
     }
 }

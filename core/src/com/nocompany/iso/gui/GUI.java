@@ -12,9 +12,4 @@ public class GUI {
 
     }
 
-    public resize(){
-        orthographicCamera = new OrthographicCamera();
-        
-    }
-
 }

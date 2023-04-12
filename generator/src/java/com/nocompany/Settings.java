@@ -16,7 +16,7 @@ public class Settings{
     public final int gridsX = 1;
     public final int gridsY = 1;
 
-    public final int seed = 232;
+    public final int seed = 234;
 
     TileMap tilesDisposer = null;
     TileVariants tileVariants = null;

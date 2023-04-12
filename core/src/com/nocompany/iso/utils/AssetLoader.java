@@ -43,6 +43,7 @@ public class AssetLoader implements Disposable {
 	private HashMap<Integer, TextureAtlas> textureAtlases;
 
 	private Texture errorTile;
+	private TextureRegion errorTileRegion;
 	public Texture upTile, downTile, leftTile, rightTile;
 
 	private Texture inWaterTile;
@@ -83,10 +84,10 @@ public class AssetLoader implements Disposable {
 //		uiShader = new ShaderProgram(uiV, uiF);
 
 
-//		upTile = new Texture(Gdx.files.internal("up.png"));
-//		rightTile = new Texture(Gdx.files.internal("right.png"));
-//		leftTile = new Texture(Gdx.files.internal("left.png"));
-//		downTile = new Texture(Gdx.files.internal("down.png"));
+		upTile = new Texture(Gdx.files.internal("up.png"));
+		rightTile = new Texture(Gdx.files.internal("right.png"));
+		leftTile = new Texture(Gdx.files.internal("left.png"));
+		downTile = new Texture(Gdx.files.internal("down.png"));
 
 		map = new Texture(Gdx.files.internal("minimap.png"), true);
 		map.setFilter(Texture.TextureFilter.MipMap, Texture.TextureFilter.MipMap);
@@ -102,15 +103,15 @@ public class AssetLoader implements Disposable {
 
 
 		cellsPack = new HashMap<>();
-////		cellsPack.put((int) CellType.SWAMP.getTileId(), new CellsPack("tiles/swamp"));
-//		cellsPack.put((int) CellType.CLAY.getTileId(), new CellsPack("tiles/clay")); //
-//		cellsPack.put((int) CellType.MOOR.getTileId(), new CellsPack("tiles/moor")); //
-////		cellsPack.put((int) CellType.FEN.getTileId(), new CellsPack("tiles/fen"));
-//		cellsPack.put((int) CellType.WATER.getTileId(), new CellsPack("tiles/water2")); //
-//		cellsPack.put((int) CellType.WATER_DEEP.getTileId(), new CellsPack("tiles/water")); //
-//		cellsPack.put((int) CellType.SAND.getTileId(), new CellsPack("tiles/sand")); //
-//		cellsPack.put((int) CellType.HEARTH.getTileId(), new CellsPack("tiles/heath2")); //
-//		cellsPack.put((int) CellType.LEAF.getTileId(), new CellsPack("tiles/leaf")); //
+		cellsPack.put((int) CellType.SWAMP.getTileId(), new CellsPack("tiles/swamp"));
+		cellsPack.put((int) CellType.CLAY.getTileId(), new CellsPack("tiles/clay")); //
+		cellsPack.put((int) CellType.MOOR.getTileId(), new CellsPack("tiles/moor")); //
+		cellsPack.put((int) CellType.FEN.getTileId(), new CellsPack("tiles/fen"));
+		cellsPack.put((int) CellType.WATER.getTileId(), new CellsPack("tiles/water2")); //
+		cellsPack.put((int) CellType.WATER_DEEP.getTileId(), new CellsPack("tiles/water")); //
+		cellsPack.put((int) CellType.SAND.getTileId(), new CellsPack("tiles/sand")); //
+		cellsPack.put((int) CellType.HEARTH.getTileId(), new CellsPack("tiles/heath2")); //
+		cellsPack.put((int) CellType.LEAF.getTileId(), new CellsPack("tiles/leaf")); //
 
 		long timeMillis1 = TimeUtils.millis();
 
@@ -138,9 +139,8 @@ public class AssetLoader implements Disposable {
 
 //		texture = new Texture(Gdx.files.internal("tiles/moor/base_9.png"));
 //		texture1 = new Texture(Gdx.files.internal("tiles/moor/base_1.png"));
-//		errorTile = new Texture("error.png");
-
-
+		errorTile = new Texture(Gdx.files.internal("error.png"));
+		errorTileRegion = new TextureRegion(  errorTile);
 
 		long timeMillis2 = TimeUtils.millis();
 
@@ -192,6 +192,7 @@ public class AssetLoader implements Disposable {
 		return textureAtlases.get(id);
 	}
 	public CellsPack getCells(int id){
+		System.out.println( cellsPack.size() );
 		return cellsPack.get(id);
 	}
 	public Texture getError(){
@@ -522,9 +523,9 @@ public class AssetLoader implements Disposable {
 				texture = cellsPack.findRegion("c1", 3);
 				break;
 				
-//			case 91:
-//				texture = AssetLoader.GetInstance().getError().;
-//				break;
+			case 91:
+				texture = errorTileRegion;//AssetLoader.GetInstance().getError();
+				break;
 		}
 
 		return texture;

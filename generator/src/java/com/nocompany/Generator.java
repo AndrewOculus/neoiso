@@ -65,6 +65,7 @@ public class Generator {
         
         makeGrids( grids, random, settings, mixer );
         makeSandAndRiversAndLakes( grids, random, settings );
+        correctGridsCells( grids, settings );
         setCellsType( grids, random, settings );
         // correctGrids( grids, settings );
         // makeModesGrids( grids, settings, random );
@@ -552,6 +553,48 @@ public class Generator {
         }
 
     }
+
+    static void correctGridsCells( HashMap<String, Grid> gridsHashMap, Settings settings ){
+        System.out.println("Correct grids");
+
+        for(Map.Entry<String, Grid> entry : gridsHashMap.entrySet()) {
+
+            Grid grid = entry.getValue();
+            grid.read();
+
+            int startX = grid.getPosX() * settings.gridSizeX;
+            int stopX = (grid.getPosX() + 1) * settings.gridSizeX;
+
+            int startY = grid.getPosY() * settings.gridSizeY;
+            int stopY = (grid.getPosY() + 1) * settings.gridSizeY;
+
+            for( int layer = 0 ; layer < grid.getLayersCount() ; ++layer ){
+                for(int y = startY+1 ; y < stopY-1 ; ++y){
+                    for(int x = startX+1 ; x < stopX-1 ; ++x){
+                        Byte cell = grid.getLayer(layer).getCell(x, y);
+                        Byte[] cells = getCellNeibors( grid.getLayer(layer), settings, x, y );
+
+                        int n = 0;
+                        for( int i = 0 ; i < 8 ; ++i ){
+                            n += cells[i] != null ? 1 : 0;
+                        }
+
+                        if( n < 4 ){
+                            grid.getLayer(layer).setCell(x, y, null);
+                        }
+                    }
+                }
+            }
+
+            // makeImage(grid, 0);
+            // makeImage(grid, 1);
+            // makeImage(grid, 2);
+
+            // grid.release();
+            grid.drop();
+        }
+    }
+
 
     static void correctGrids( HashMap<String, Grid> gridsHashMap, Settings settings ){
         System.out.println("Correct grids");
