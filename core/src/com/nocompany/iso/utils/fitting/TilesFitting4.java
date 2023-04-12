@@ -170,7 +170,7 @@ public class TilesFitting4 extends ApplicationAdapter {
             camera.update();
         }
 
-        CellsPack cellsPack = AssetLoader.GetInstance().getCells(CellType.CLAY.getTileId());
+        CellsPack cellsPack = AssetLoader.GetInstance().getCells(CellType.WATER.getTileId());
 
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             // updateState(cellsPack);
@@ -184,7 +184,7 @@ public class TilesFitting4 extends ApplicationAdapter {
         }
 
         // Layer layer = tilesMapFromFile.get(0);
-        CellsPack cellsPack1 = AssetLoader.GetInstance().getCells( CellType.CLAY.getTileId());
+        CellsPack cellsPack1 = AssetLoader.GetInstance().getCells( CellType.WATER.getTileId());
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             nextState();
@@ -221,6 +221,7 @@ public class TilesFitting4 extends ApplicationAdapter {
         int shift = 0;
 
         bitmapFont.draw(spriteBatch, ((int)(field) & 0xff)+"", -256, 32);
+        bitmapFont.draw(spriteBatch, ((byte)(field))+"", -256, 64);
 
 
         spriteBatch.setColor(1.0f, 1.0f, 1.0f, .5f);
