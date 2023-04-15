@@ -12,7 +12,7 @@ public class DesktopLauncher {
 		config.vSyncEnabled = true;
 		config.width = 800;
 		config.height = 600;
-		// new LwjglApplication(new Iso(), config);
-		new LwjglApplication(new TilesFitting4(), config);
+		new LwjglApplication(new Iso(), config);
+		// new LwjglApplication(new TilesFitting4(), config);
 	}
 }

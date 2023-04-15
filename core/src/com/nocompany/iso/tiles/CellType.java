@@ -12,8 +12,9 @@ public enum CellType {
     MOOR((byte) 8, (byte) 125, (byte)70, (byte)55),
     SAND((byte) 9, (byte) 184, (byte)252, (byte)245),
     WATER((byte) 10, (byte) 250, (byte)30, (byte)0),
-    WATER_DEEP((byte) 11, (byte) 255, (byte)0, (byte)0);
-
+    WATER_DEEP((byte) 11, (byte) 255, (byte)0, (byte)0),
+    GRASS ((byte) 12, (byte) 40, (byte)255, (byte)40),
+    WALD ((byte) 13, (byte) 185, (byte)200, (byte)40);
 
     private byte tileId;
     private byte r = (byte) 255;

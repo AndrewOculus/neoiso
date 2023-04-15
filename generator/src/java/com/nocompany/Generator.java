@@ -59,7 +59,8 @@ public class Generator {
                 new GlobalLayer(Cell.LEAF, true),
                 new GlobalLayer(Cell.HEARTH, settings.seed + 0, 700.0f, 0.61f),
                 new GlobalLayer(Cell.CLAY, settings.seed + 1,   100.0f, 0.71f),
-                new GlobalLayer(Cell.MOOR, settings.seed + 2,   100.0f, 0.61f)
+                new GlobalLayer(Cell.MOOR, settings.seed + 2,   100.0f, 0.61f),
+                new GlobalLayer(Cell.FEN, settings.seed + 3,   400.0f, 0.71f),
             }
         );
         
@@ -581,7 +582,39 @@ public class Generator {
 
                         if( n < 4 ){
                             grid.getLayer(layer).setCell(x, y, null);
+                            continue;
                         }
+
+                        if( cells[0] == null && cells[6] == null && cells[1] != null && cells[2] != null && cells[3] != null && cells[4] != null && cells[5] != null && cells[7] != null ){
+                            grid.getLayer(layer).setCell(x, y, null);
+                            continue;
+                        }
+
+                        if( cells[0] != null && cells[6] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] != null && cells[5] != null && cells[7] == null ){
+                            grid.getLayer(layer).setCell(x, y, null);
+                            continue;
+                        }
+
+                        if( cells[0] == null && cells[1] == null && cells[2] == null && cells[3] != null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
+                            grid.getLayer(layer).setCell(x, y, null);
+                            continue;
+                        }
+
+                        if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] == null && cells[5] != null && cells[6] != null && cells[7] != null ){
+                            grid.getLayer(layer).setCell(x, y, null);
+                            continue;
+                        }
+
+                        if( cells[0] != null && cells[1] != null && cells[2] != null && cells[3] == null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
+                            grid.getLayer(layer).setCell(x, y, null);
+                            continue;
+                        }
+
+                        if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
+                            grid.getLayer(layer).setCell(x, y, null);
+                            continue;
+                        }
+
                     }
                 }
             }

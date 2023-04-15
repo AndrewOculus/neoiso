@@ -155,13 +155,15 @@ public class AssetLoader implements Disposable {
 		manager.load("tiles_atlases/sand.atlas", TextureAtlas.class);
 		manager.load("tiles_atlases/water_deep.atlas", TextureAtlas.class);
 		manager.load("tiles_atlases/water.atlas", TextureAtlas.class);
+		manager.load("tiles_atlases/grass.atlas", TextureAtlas.class);
+		manager.load("tiles_atlases/wald.atlas", TextureAtlas.class);
 		manager.finishLoading();
 
 
-//		textureAtlases.put((int) CellType.SWAMP.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/swamp.atlas")));
+		textureAtlases.put((int) CellType.GRASS.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/grass.atlas")));
 		textureAtlases.put((int) CellType.CLAY.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/clay.atlas"))); //
 		textureAtlases.put((int) CellType.MOOR.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/moor.atlas"))); //
-//		textureAtlases.put((int) CellType.FEN.getTileId(), 			((TextureAtlas)manager.get("tiles_atlases/fen.atlas")));
+		textureAtlases.put((int) CellType.WALD.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/wald.atlas")));
 		textureAtlases.put((int) CellType.WATER.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/water.atlas"))); //
 		textureAtlases.put((int) CellType.WATER_DEEP.getTileId(), 	((TextureAtlas)manager.get("tiles_atlases/water_deep.atlas"))); //
 		textureAtlases.put((int) CellType.SAND.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/sand.atlas"))); //
