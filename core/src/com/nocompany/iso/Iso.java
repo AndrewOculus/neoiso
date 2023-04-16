@@ -95,8 +95,8 @@ public class Iso extends ApplicationAdapter {
 		touchController = TouchController.getInstance();
 
 		Preferences preferences = Gdx.app.getPreferences("savestore");
-		animalTestMove.setX( 0);//preferences.getFloat("HeroX", animalTestMove.getX()));
-		animalTestMove.setY( 0);//preferences.getFloat("HeroY", animalTestMove.getY()));
+		animalTestMove.setX( 35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
+		animalTestMove.setY( 5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
 		preferences.flush();
 
 		System.out.println("===============================");
@@ -224,7 +224,7 @@ public class Iso extends ApplicationAdapter {
 		// }
 
 		NetworkSubroutine.update( animalTestMove.getX(), animalTestMove.getY() );
-
+		// System.out.println( animalTestMove.getX() + " " + animalTestMove.getY() );
 		target.set( animalTestMove.GetIsoX(), animalTestMove.GetIsoY(), 0);
 		camera.position.set( camera.position.lerp(target, 0.1f) );
 

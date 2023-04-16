@@ -66,8 +66,10 @@ public class Generator {
         
         makeGrids( grids, random, settings, mixer );
         makeSandAndRiversAndLakes( grids, random, settings );
-        correctGridsCells( grids, settings );
+        correctGridsCells( grids, settings, random );
+        correctGridsCells( grids, settings, random  );
         setCellsType( grids, random, settings );
+
         // correctGrids( grids, settings );
         // makeModesGrids( grids, settings, random );
     }
@@ -555,7 +557,7 @@ public class Generator {
 
     }
 
-    static void correctGridsCells( HashMap<String, Grid> gridsHashMap, Settings settings ){
+    static void correctGridsCells( HashMap<String, Grid> gridsHashMap, Settings settings, Random random ){
         System.out.println("Correct grids");
 
         for(Map.Entry<String, Grid> entry : gridsHashMap.entrySet()) {
@@ -580,41 +582,73 @@ public class Generator {
                             n += cells[i] != null ? 1 : 0;
                         }
 
-                        if( n < 4 ){
+                        boolean correct = isCorrect( 
+                            settings, 
+                            random, 
+                            cell,
+                            cells[0],
+                            cells[1],
+                            cells[2],
+                            cells[3],
+                            cells[4],
+                            cells[5],
+                            cells[6],
+                            cells[7]
+                        );
+
+                        if( !correct ){
                             grid.getLayer(layer).setCell(x, y, null);
-                            continue;
                         }
 
-                        if( cells[0] == null && cells[6] == null && cells[1] != null && cells[2] != null && cells[3] != null && cells[4] != null && cells[5] != null && cells[7] != null ){
-                            grid.getLayer(layer).setCell(x, y, null);
-                            continue;
-                        }
+                        // if( n < 4 ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        // }
 
-                        if( cells[0] != null && cells[6] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] != null && cells[5] != null && cells[7] == null ){
-                            grid.getLayer(layer).setCell(x, y, null);
-                            continue;
-                        }
+                        // if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
 
-                        if( cells[0] == null && cells[1] == null && cells[2] == null && cells[3] != null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
-                            grid.getLayer(layer).setCell(x, y, null);
-                            continue;
-                        }
+                        // if( cells[0] != null && cells[1] != null && cells[2] != null && cells[3] == null && cells[4] == null && cells[5] != null && cells[6] != null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
 
-                        if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] == null && cells[5] != null && cells[6] != null && cells[7] != null ){
-                            grid.getLayer(layer).setCell(x, y, null);
-                            continue;
-                        }
+                        // if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] != null && cells[5] == null && cells[6] != null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
+                    
+                        // if( cells[0] != null && cells[1] != null && cells[2] == null && cells[3] != null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
 
-                        if( cells[0] != null && cells[1] != null && cells[2] != null && cells[3] == null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
-                            grid.getLayer(layer).setCell(x, y, null);
-                            continue;
-                        }
+                    
+                        // if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] == null && cells[4] != null && cells[5] != null && cells[6] != null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
 
-                        if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
-                            grid.getLayer(layer).setCell(x, y, null);
-                            continue;
-                        }
+                        // if( cells[0] != null && cells[1] != null && cells[2] != null && cells[3] != null && cells[4] == null && cells[5] != null && cells[6] == null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
 
+                        // if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] == null && cells[4] != null && cells[5] != null && cells[6] != null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
+
+                        // if( cells[0] != null && cells[1] == null && cells[2] != null && cells[3] != null && cells[4] == null && cells[5] != null && cells[6] != null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
+
+                        // if( cells[0] != null && cells[1] != null && cells[2] != null && cells[3] == null && cells[4] != null && cells[5] != null && cells[6] == null && cells[7] != null ){
+                        //     grid.getLayer(layer).setCell(x, y, null);
+                        //     // continue;
+                        // }
                     }
                 }
             }
@@ -837,6 +871,46 @@ public class Generator {
         }
 
         return true;
+    }
+
+    static boolean isCorrect( 
+        Settings settings, Random random, Byte tile, Byte bul, Byte bl,
+        Byte bdl, Byte bu, Byte bd,
+        Byte bur, Byte br, Byte bdr ){
+
+        if( tile == null ){
+            return false;
+        }
+
+        BitSet bitField = new BitSet(8);
+
+        boolean ul  =   byteCmp(tile, bul);
+        boolean l   =   byteCmp(tile, bl);
+        boolean dl  =   byteCmp(tile, bdl);
+        boolean u   =   byteCmp(tile, bu);
+        boolean d   =   byteCmp(tile, bd);
+        boolean ur  =   byteCmp(tile, bur);
+        boolean r   =   byteCmp(tile, br);
+        boolean dr  =   byteCmp(tile, bdr);
+
+        // ul, l, dl, u, d, ur, r, dr
+
+        bitField.set(7, ul);
+        bitField.set(6, l);
+        bitField.set(5, dl);
+        bitField.set(4, u);
+        bitField.set(3, d);
+        bitField.set(2, ur);
+        bitField.set(1, r);
+        bitField.set(0, dr);
+
+        byte tilesOrder = 0x00;
+        if(bitField.toByteArray().length != 0){
+            tilesOrder = bitField.toByteArray()[0];
+        }
+
+        Short result = settings.tilesDisposer.getTile( tilesOrder );
+        return result == null ? false : true;
     }
 
     static Short correctModesGrids( 
