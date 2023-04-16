@@ -161,6 +161,7 @@ public class MapBaker {
                     cellsPack = AssetLoader.GetInstance().getCellsAtlas(firstTile);
                     if(cellsPack != null) {
                         TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, firstTileType);
+                        if(texture!=null)
                         spriteBatch.draw(texture, x, y);
                     }
                 }

@@ -61,6 +61,8 @@ public class Generator {
                 new GlobalLayer(Cell.CLAY, settings.seed + 1,   100.0f, 0.71f),
                 new GlobalLayer(Cell.MOOR, settings.seed + 2,   100.0f, 0.61f),
                 new GlobalLayer(Cell.FEN, settings.seed + 3,   400.0f, 0.71f),
+                new GlobalLayer(Cell.WALD, settings.seed + 4,   450.0f, 0.55f),
+                new GlobalLayer(Cell.GRASS, settings.seed + 5,   200.0f, 0.61f),
             }
         );
         
