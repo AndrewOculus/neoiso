@@ -149,20 +149,22 @@ public class MapBaker {
                     TextureAtlas cellsPack = AssetLoader.GetInstance().getCellsAtlas(thirdTile);
                     if(cellsPack != null){
                         TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, (short) 0);
-                        spriteBatch.draw(texture, x, y);
+                        if(texture!=null)
+                            spriteBatch.draw(texture, x, y);
                     }
 
                     cellsPack = AssetLoader.GetInstance().getCellsAtlas(secondTile);
                     if(cellsPack != null) {
                         TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, secondTileType);
-                        spriteBatch.draw(texture, x, y);
+                        if(texture!=null)
+                            spriteBatch.draw(texture, x, y);
                     }
 
                     cellsPack = AssetLoader.GetInstance().getCellsAtlas(firstTile);
                     if(cellsPack != null) {
                         TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, firstTileType);
                         if(texture!=null)
-                        spriteBatch.draw(texture, x, y);
+                            spriteBatch.draw(texture, x, y);
                     }
                 }
             }
