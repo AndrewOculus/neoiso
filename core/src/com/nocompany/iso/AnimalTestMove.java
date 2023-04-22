@@ -113,46 +113,46 @@ public class AnimalTestMove implements SceneObject {
         }
 
         if(W && keys == 1){
-            rotation = 315;//0;
+            rotation = 0;//0; 315
             _2dY += velocity/2;
-        }
-
-        if(S && keys == 1){
-            rotation = 135;//180;
-            _2dY -= velocity/2;
-        }
-
-        if(A && keys == 1){
-            rotation = 225;//270;
-            _2dX -= velocity/2;
-        }
-
-        if(D && keys == 1){
-            rotation = 45;//90;
             _2dX += velocity/2;
         }
 
-        if(W && A){
-            rotation = 270;//315;
-            _2dY += velocity/2;
+        if(S && keys == 1){
+            rotation = 180;//180; 135
+            _2dY -= velocity/2;
             _2dX -= velocity/2;
         }
 
-        if(W && D){
-            rotation = 0;//45;
+        if(A && keys == 1){
+            rotation = 270;//270; 225
+            _2dX -= velocity/2;
             _2dY += velocity/2;
+        }
+
+        if(D && keys == 1){
+            rotation = 90;//90; 45
+            _2dX += velocity/2;
+            _2dY -= velocity/2;
+        }
+
+        if(W && A){
+            rotation = 315;//315; 270
+            _2dY += velocity/2;
+        }
+
+        if(W && D){
+            rotation = 45;//45; 0
             _2dX += velocity/2;
         }
 
         if(S && A){
-            rotation = 180;//225;
-            _2dY -= velocity/2;
+            rotation = 225;//225; 180
             _2dX -= velocity/2;
         }
         if(S && D){
-            rotation = 90;//135;
+            rotation = 135;//135; 90
             _2dY -= velocity/2;
-            _2dX += velocity/2;
         }
 
         _2dToIsoTmp.x = _2dX;
