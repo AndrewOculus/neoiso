@@ -61,7 +61,7 @@ public class Iso extends ApplicationAdapter {
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(0, 0, 0);
 
-		camera.position.set(4011.9043f,5154.005f,0.0f);
+		camera.position.set(83789.0f, 47314.0f, 0);//4011.9043f,5154.005f,0.0f);
 		camera.zoom = 1.80005f;
 
 		camera.update();
@@ -95,8 +95,8 @@ public class Iso extends ApplicationAdapter {
 		touchController = TouchController.getInstance();
 
 		Preferences preferences = Gdx.app.getPreferences("savestore");
-		animalTestMove.setX( 35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
-		animalTestMove.setY( 5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
+		animalTestMove.setX( 83789 );//35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
+		animalTestMove.setY( 47314 );//5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
 		preferences.flush();
 
 		System.out.println("===============================");

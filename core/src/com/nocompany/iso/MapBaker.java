@@ -151,6 +151,10 @@ public class MapBaker {
                         TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, (short) 0);
                         if(texture!=null)
                             spriteBatch.draw(texture, x, y);
+                        
+                    }
+                    else{
+                        System.out.println("thirdTile "+thirdTile);
                     }
 
                     cellsPack = AssetLoader.GetInstance().getCellsAtlas(secondTile);
@@ -159,12 +163,18 @@ public class MapBaker {
                         if(texture!=null)
                             spriteBatch.draw(texture, x, y);
                     }
+                    else{
+                        System.out.println("secondTile "+secondTile);
+                    }
 
                     cellsPack = AssetLoader.GetInstance().getCellsAtlas(firstTile);
                     if(cellsPack != null) {
                         TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, firstTileType);
                         if(texture!=null)
                             spriteBatch.draw(texture, x, y);
+                    }
+                    else{
+                        System.out.println("firstTile "+firstTile);
                     }
                 }
             }

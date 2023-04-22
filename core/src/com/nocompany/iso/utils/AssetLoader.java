@@ -160,6 +160,7 @@ public class AssetLoader implements Disposable {
 		manager.finishLoading();
 
 
+		textureAtlases.put((int) CellType.FEN.getTileId(), 			((TextureAtlas)manager.get("tiles_atlases/fen.atlas")));
 		textureAtlases.put((int) CellType.GRASS.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/grass.atlas")));
 		textureAtlases.put((int) CellType.CLAY.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/clay.atlas"))); //
 		textureAtlases.put((int) CellType.MOOR.getTileId(), 		((TextureAtlas)manager.get("tiles_atlases/moor.atlas"))); //
