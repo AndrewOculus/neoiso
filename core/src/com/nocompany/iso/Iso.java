@@ -31,6 +31,8 @@ import java.util.ListIterator;
 public class Iso extends ApplicationAdapter {
 
 	SpriteBatch batch;
+	SpriteBatch waterBatch;
+
 	OrthographicCamera camera;
 	HashMap<String, MapTileGroup> tileGroupsHash;
 	int[] dir = { -2, -1, 0, 1, 2 };
@@ -53,6 +55,8 @@ public class Iso extends ApplicationAdapter {
 	ShapeRenderer shapeRenderer2;
 
 	UserInterface userInterface;
+
+	float time = 0;
 
 	@Override
 	public void create () {
@@ -142,6 +146,9 @@ public class Iso extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+
+		time += Gdx.graphics.getDeltaTime();
+
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -187,6 +194,8 @@ public class Iso extends ApplicationAdapter {
 				break;
 		}
 
+
+		batch.setShader( null );
 		batch.begin();
 
 		for( int i = 0 ; i < dir.length ; i++ ){
@@ -203,6 +212,24 @@ public class Iso extends ApplicationAdapter {
 
 			}
 		}
+		batch.end();
+
+		AssetLoader.GetInstance().waterShader.begin();
+		AssetLoader.GetInstance().waterShader.setUniformf("time", time);
+		AssetLoader.GetInstance().waterShader.end();
+
+		batch.setShader( AssetLoader.GetInstance().waterShader );
+		batch.begin();
+		for( int i = 0 ; i < dir.length ; i++ ){
+			for( int j = 0 ; j < dir.length ; j++ ){
+				MapTileGroup tileGroup = tileGroupsHash.get(String.format("%d_%d", x + dir[i], y + dir[j]));
+				tileGroup.renderWater(batch);
+			}
+		}
+		batch.end();
+
+		batch.setShader( null );
+		batch.begin();
 		// MapTileGroup tileGroup = tileGroupsHash.get(String.format("%d_%d", x, y));
 
 		// if(tileGroup!=null){
@@ -238,7 +265,7 @@ public class Iso extends ApplicationAdapter {
 		// draw fps
 		batch.end();
 
-		MapTileGroup tileGroup1 = tileGroupsHash.get(String.format("%d_%d", x, y));
+		// MapTileGroup tileGroup1 = tileGroupsHash.get(String.format("%d_%d", x, y));
 
 		batch.setProjectionMatrix(hudCamera.combined);
 		batch.begin();

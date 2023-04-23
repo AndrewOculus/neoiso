@@ -10,9 +10,12 @@ import com.nocompany.iso.Settings;
 import com.nocompany.iso.net.NetworkManager;
 import com.nocompany.iso.net.NetworkMessage;
 import com.nocompany.iso.objects.SceneObject;
+import com.nocompany.iso.utils.AssetLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 
 public class MapTileGroup implements Disposable {
 
@@ -20,7 +23,7 @@ public class MapTileGroup implements Disposable {
     private MapLayer tiles;
     private ArrayList<SceneObject> gameObjects;
     private MapBaker baker;
-    private Texture atlas;
+    private Texture atlas, water;
     private boolean isBaked = false;
     private boolean isEmpty = false;
     private boolean isLoaded = false;
@@ -120,17 +123,38 @@ public class MapTileGroup implements Disposable {
         }
 
         if(atlas != null)
-//            spriteBatch.draw(atlas, x - Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH /2, y  , Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH, Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT );
             spriteBatch.draw(atlas, x, y, Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH, Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT );
 
+//            spriteBatch.draw(atlas, x - Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH /2, y  , Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH, Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT );
+		// AssetLoader.GetInstance().waterShader.begin();
+		// AssetLoader.GetInstance().waterShader.setUniformi("use", 0);
+		// AssetLoader.GetInstance().waterShader.end();
+
+
+        // AssetLoader.GetInstance().waterShader.begin();
+		// AssetLoader.GetInstance().waterShader.setUniformi("use", 1);
+		// AssetLoader.GetInstance().waterShader.end();
+
         this.lastUpdate = TimeUtils.millis();
+    }
+
+    public void renderWater(SpriteBatch spriteBatch){
+        if(water != null)
+            spriteBatch.draw(water, x, y, Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH, Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT );
     }
 
     public ArrayList<SceneObject> getObjects(){
         return gameObjects;
     }
 
-    public void setAtlas(Texture atlas){
+    public void setWaterAtlas(Texture water){
+        if(this.water != null)
+            this.water.dispose();
+
+        this.water = water;
+    }
+
+    public void setMainAtlas(Texture atlas){
         if(this.atlas != null)
             this.atlas.dispose();
 
@@ -171,6 +195,13 @@ public class MapTileGroup implements Disposable {
                 sc.setActive(false);
             }
 
+
+        if(water != null) {
+            water.dispose();
+            water = null;
+
+            System.out.println("Atlas object " + this.hashCode() + "water disposed");
+        }
         if(atlas != null) {
             atlas.dispose();
             atlas = null;

@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 // import com.badlogic.gdx.graphics.g3d.Shader;
-// import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -53,7 +53,7 @@ public class AssetLoader implements Disposable {
 	public Texture uiCloseBtnIdle;
 	public Texture uiCloseBtnPress;
 
-//	private ShaderProgram uiShader;
+	public ShaderProgram waterShader;
 
 	private Animation<Texture> animObject;
 
@@ -78,11 +78,10 @@ public class AssetLoader implements Disposable {
 		animObject = new Animation<Texture>(0.4f, animTextures);
 		animObject.setPlayMode(Animation.PlayMode.LOOP);
 
-//		ShaderProgram.pedantic = false;
-//		String uiV = Gdx.files.internal("shaders/ui/win_v.glsl").readString();
-//		String uiF = Gdx.files.internal("shaders/ui/win_f.glsl").readString();
-//		uiShader = new ShaderProgram(uiV, uiF);
-
+		ShaderProgram.pedantic = false;
+		String waterVertex = Gdx.files.internal("shaders/ui/water_vertex.glsl").readString();
+		String waterFragment = Gdx.files.internal("shaders/ui/water_fragment.glsl").readString();
+		waterShader = new ShaderProgram(waterVertex, waterFragment);
 
 		upTile = new Texture(Gdx.files.internal("up.png"));
 		rightTile = new Texture(Gdx.files.internal("right.png"));

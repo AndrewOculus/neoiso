@@ -14,6 +14,7 @@ import com.nocompany.iso.objects.AnimateObject;
 import com.nocompany.iso.tiles.*;
 import com.nocompany.iso.utils.AssetLoader;
 
+import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.ThreadLocalRandom;
@@ -30,6 +31,7 @@ public class MapBaker {
     }
 
     private FrameBuffer tilesFrameBuffer;
+    private FrameBuffer waterTilesFrameBuffer;
     private SpriteBatch spriteBatch;
     private OrthographicCamera bakerCamera;
 
@@ -65,6 +67,9 @@ public class MapBaker {
 //        }
         if(tilesFrameBuffer == null)
             tilesFrameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, (int)(Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH ), (int)(Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT ), false);
+
+        if(waterTilesFrameBuffer == null)
+            waterTilesFrameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, (int)(Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH ), (int)(Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT ), false);
 
         if(!tileGroupQueue.isEmpty()){
             MapTileGroup mapTileGroup = tileGroupQueue.peek();
@@ -111,6 +116,7 @@ public class MapBaker {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         }
 
+        ArrayList<StoreWater> waterArray = new ArrayList();
 
         for (int j = tileGroup.from; j < tileGroup.to; j++) {
             for (int i = 0; i < tiles.getHeight(); i++) {
@@ -122,6 +128,16 @@ public class MapBaker {
                 short firstTile = (short) (currentTile  >> 28   & 0x0000000f);
                 short secondTile = (short) (currentTile >> 24   & 0x0000000f);
                 short thirdTile = (short) (currentTile  >> 16   & 0x0000000f);
+
+                int noRenderWaterFirst = 0;
+                if( firstTile == CellType.WATER.getTileId() || firstTile == CellType.WATER_DEEP.getTileId()){
+                    noRenderWaterFirst = 1;
+                }
+
+                int noRenderWaterSecond = 0;
+                if( secondTile == CellType.WATER.getTileId() || secondTile == CellType.WATER_DEEP.getTileId()){
+                    noRenderWaterSecond = 1;
+                }  
 
                 float x = i * Settings.TILE_HEIGHT  - j * Settings.TILE_HEIGHT ;
                 float y = (i * Settings.TILE_HEIGHT  + j * Settings.TILE_HEIGHT ) / 2;
@@ -142,7 +158,18 @@ public class MapBaker {
                     if(cellsPack != null) {
                         TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, firstTileType);
                         spriteBatch.draw(texture, x, y);
+
+                        if ( noRenderWaterFirst != 0 ){
+                            StoreWater store = new StoreWater();
+                            store.type = firstTileType;
+                            store.mode = firstTile;
+                            store.x = x;
+                            store.y = y;
+                            waterArray.add( store );
+                        }
+
                     }
+                    
 
                 } else {
 
@@ -156,31 +183,78 @@ public class MapBaker {
                     else{
                         System.out.println("thirdTile "+thirdTile);
                     }
+                        cellsPack = AssetLoader.GetInstance().getCellsAtlas(secondTile);
+                        if(cellsPack != null) {
+                            TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, secondTileType);
+                            if(texture!=null)
+                                spriteBatch.draw(texture, x, y);
 
-                    cellsPack = AssetLoader.GetInstance().getCellsAtlas(secondTile);
-                    if(cellsPack != null) {
-                        TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, secondTileType);
-                        if(texture!=null)
-                            spriteBatch.draw(texture, x, y);
-                    }
-                    else{
-                        System.out.println("secondTile "+secondTile);
-                    }
+                            if ( noRenderWaterSecond != 0){
+                                StoreWater store = new StoreWater();
+                                store.type = secondTileType;
+                                store.mode = secondTile;
+                                store.x = x;
+                                store.y = y;
+                                waterArray.add( store );
+                            }
+                        }
+                        else{
+                            System.out.println("secondTile "+secondTile);
+                        }
+                    
+                        cellsPack = AssetLoader.GetInstance().getCellsAtlas(firstTile);
+                        if(cellsPack != null) {
+                            TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, firstTileType);
+                            if(texture!=null)
+                                spriteBatch.draw(texture, x, y);
 
-                    cellsPack = AssetLoader.GetInstance().getCellsAtlas(firstTile);
-                    if(cellsPack != null) {
-                        TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, firstTileType);
-                        if(texture!=null)
-                            spriteBatch.draw(texture, x, y);
-                    }
-                    else{
-                        System.out.println("firstTile "+firstTile);
-                    }
+                            if(noRenderWaterFirst != 0){
+                                StoreWater store = new StoreWater();
+                                store.type = firstTileType;
+                                store.mode = firstTile;
+                                store.x = x;
+                                store.y = y;
+                                waterArray.add( store );
+                            }
+                        }
+                        else{
+                            System.out.println("firstTile "+firstTile);
+                        }
+                    
                 }
             }
         }
         spriteBatch.end();
         tilesFrameBuffer.end();
+
+        if( !waterArray.isEmpty() ){
+            waterTilesFrameBuffer.begin();
+            spriteBatch.setProjectionMatrix(bakerCamera.combined);
+            spriteBatch.enableBlending();
+            spriteBatch.begin();
+
+        // if(tileGroup.from == 0){
+            // Gdx.gl.glClearColor(1, 1, 1, 0);
+            // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // }
+
+            for( int i = 0  ; i < waterArray.size() ; ++i ){
+                StoreWater store = waterArray.get(i);
+
+                short firstTile = store.mode;
+                short firstTileType = store.type;
+
+                TextureAtlas cellsPack = AssetLoader.GetInstance().getCellsAtlas(firstTile);
+                if(cellsPack != null) {
+                    TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, firstTileType);
+                    if(texture!=null)
+                        spriteBatch.draw(texture, store.x, store.y);
+                }
+            }
+
+            spriteBatch.end();
+            waterTilesFrameBuffer.end();
+        }
 
         if( !tileGroup.isComplite ){
             return null;
@@ -196,16 +270,33 @@ public class MapBaker {
 //            times = 0;
 //        }
 
-        Texture texture = tilesFrameBuffer.getColorBufferTexture();
+        Texture mainTexture = tilesFrameBuffer.getColorBufferTexture();
 
         tilesFrameBuffer.getTextureAttachments().removeIndex(0);
         tilesFrameBuffer.dispose();
         tilesFrameBuffer = null;
 
+        mainTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        tileGroup.setMainAtlas(mainTexture);
+
+        Texture texture = waterTilesFrameBuffer.getColorBufferTexture();
+
+        waterTilesFrameBuffer.getTextureAttachments().removeIndex(0);
+        waterTilesFrameBuffer.dispose();
+        waterTilesFrameBuffer = null;
+
         texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        tileGroup.setAtlas(texture);
+        tileGroup.setWaterAtlas(texture);
 
         return texture;
     }
+}
+
+class StoreWater{
+    float x;
+    float y;
+    short type;
+    short mode;
 }

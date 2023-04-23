@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.nocompany.iso.Iso;
 import com.nocompany.iso.utils.fitting.TilesFitting4;
 
+
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -14,5 +15,7 @@ public class DesktopLauncher {
 		config.height = 600;
 		new LwjglApplication(new Iso(), config);
 		// new LwjglApplication(new TilesFitting4(), config);
+		// new LwjglApplication(new MaskTest(), config);
+
 	}
 }
