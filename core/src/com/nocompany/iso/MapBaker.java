@@ -233,10 +233,12 @@ public class MapBaker {
             spriteBatch.enableBlending();
             spriteBatch.begin();
 
-        // if(tileGroup.from == 0){
-            // Gdx.gl.glClearColor(1, 1, 1, 0);
-            // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        // }
+            if(tileGroup.haveWater == false){
+                tileGroup.haveWater = true;
+
+                Gdx.gl.glClearColor(0, 0, 0, 0);
+                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            }
 
             for( int i = 0  ; i < waterArray.size() ; ++i ){
                 StoreWater store = waterArray.get(i);
@@ -270,15 +272,7 @@ public class MapBaker {
 //            times = 0;
 //        }
 
-        Texture mainTexture = tilesFrameBuffer.getColorBufferTexture();
 
-        tilesFrameBuffer.getTextureAttachments().removeIndex(0);
-        tilesFrameBuffer.dispose();
-        tilesFrameBuffer = null;
-
-        mainTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-
-        tileGroup.setMainAtlas(mainTexture);
 
         Texture texture = waterTilesFrameBuffer.getColorBufferTexture();
 
@@ -287,8 +281,20 @@ public class MapBaker {
         waterTilesFrameBuffer = null;
 
         texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        if(tileGroup.haveWater)
+            tileGroup.setWaterAtlas(texture);
+        else{
+            texture.dispose();
+        }
 
-        tileGroup.setWaterAtlas(texture);
+        Texture mainTexture = tilesFrameBuffer.getColorBufferTexture();
+
+        tilesFrameBuffer.getTextureAttachments().removeIndex(0);
+        tilesFrameBuffer.dispose();
+        tilesFrameBuffer = null;
+
+        mainTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        tileGroup.setMainAtlas(mainTexture);
 
         return texture;
     }

@@ -37,6 +37,7 @@ public class MapTileGroup implements Disposable {
     private long lastUpdate;
 
     public int trueX, trueY;
+    public boolean haveWater = false;
 
     public MapTileGroup (int x, int y, int trueX, int trueY, MapLayer tiles, List<SceneObject> gameObjects){
 
@@ -139,7 +140,7 @@ public class MapTileGroup implements Disposable {
     }
 
     public void renderWater(SpriteBatch spriteBatch){
-        if(water != null)
+        if(water != null && haveWater)
             spriteBatch.draw(water, x, y, Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH, Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT );
     }
 
@@ -189,6 +190,7 @@ public class MapTileGroup implements Disposable {
     }
 
     public void dispose() {
+        haveWater = false;
 
         if(this.gameObjects != null)
             for (SceneObject sc: this.gameObjects) {
