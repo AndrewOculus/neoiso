@@ -127,6 +127,7 @@ public class AssetLoader implements Disposable {
 
 		gameObjectsPackHashMap = new HashMap<>();
 
+		gameObjectsPackHashMap.put(GameObjectTypes.STONE.getName(), new GameObjectsPack("trees/stone"));
 		gameObjectsPackHashMap.put(GameObjectTypes.ATREE.getName(), new GameObjectsPack("trees/atree"));
 //		gameObjectsPackHashMap.put(GameObjectTypes.BIRCH.getName(), new GameObjectsPack("trees/birch"));
 //		gameObjectsPackHashMap.put(GameObjectTypes.ELM.getName(), new GameObjectsPack("trees/elm"));

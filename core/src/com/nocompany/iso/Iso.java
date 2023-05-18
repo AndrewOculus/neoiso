@@ -31,7 +31,6 @@ import java.util.ListIterator;
 public class Iso extends ApplicationAdapter {
 
 	SpriteBatch batch;
-	SpriteBatch waterBatch;
 
 	OrthographicCamera camera;
 	HashMap<String, MapTileGroup> tileGroupsHash;
@@ -99,8 +98,8 @@ public class Iso extends ApplicationAdapter {
 		touchController = TouchController.getInstance();
 
 		Preferences preferences = Gdx.app.getPreferences("savestore");
-		animalTestMove.setX( 63760.68f );//35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
-		animalTestMove.setY( 66744.42f );//5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
+		animalTestMove.setX( 0) ;//63760.68f );//35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
+		animalTestMove.setY( 0);//66744.42f );//5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
 		preferences.flush();
 
 		System.out.println("===============================");
@@ -139,7 +138,6 @@ public class Iso extends ApplicationAdapter {
 		String json = gson.toJson(uiButton);
 
 		System.out.println( json );
-
 	}
 
 	AnimalTestMove animalTestMove;
@@ -149,7 +147,7 @@ public class Iso extends ApplicationAdapter {
 
 		time += Gdx.graphics.getDeltaTime();
 
-		if (time > 1000.0f){
+		if (time > 31.4159){
 			time = 0;
 		}
 
@@ -279,6 +277,7 @@ public class Iso extends ApplicationAdapter {
 		batch.end();
 
 		MapBaker.getInstance().asyncUpdate(x, y);
+		MiniMap.getInstance().asyncUpdate();
 		GC.getInstance(null).refresh();
 
 		// players

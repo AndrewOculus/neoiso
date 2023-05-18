@@ -30,6 +30,8 @@ public class Grid {
     private byte[] array0Y = null;
     private byte[] arrayNY = null;
 
+    ArrayList<GameObject> gameObjects = null;
+
     public Grid(int posX, int posY, int sizeX, int sizeY, int groupSizeX, int groupSizeY, Cell[] cells ){
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -97,6 +99,12 @@ public class Grid {
     }
 
     public int getCell(int globalCellX, int globalCellY ){
+
+        // byte firstByte = data[ y*sizeX*4 + x*4 + 0 ];
+        // byte secondByte = data[ y*sizeX*4 + x*4 + 1 ];
+        // byte thirdByte = data[ y*sizeX*4 + x*4 + 2 ];
+        // byte fourthByte = data[ y*sizeX*4 + x*4 + 3 ];
+
         return 0;
     }
 
@@ -323,6 +331,45 @@ public class Grid {
         // System.gc();
 
         // System.out.println("read " + posX + " " + posY);
+    }
+
+    public void addObject( ArrayList<GameObject> gameObjects ){
+        this.gameObjects = gameObjects;
+    }
+
+    public void storeObjects(){
+        
+        File outputFile = new File("map//"+"objs_"+posX+"_"+posY);
+        int objsAndTreesCount = gameObjects.size();
+
+        if(outputFile.exists())
+            outputFile.delete();
+
+        try {
+            outputFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+
+            ByteBuffer byteBuffer = ByteBuffer.allocate(objsAndTreesCount * 4 * 3 + 4);
+            byteBuffer.putInt(objsAndTreesCount);
+
+            for(int i = 0 ; i < gameObjects.size() ; i++){
+                GameObject obj = gameObjects.get(i);
+                byteBuffer.putInt(obj.getGameObjectType());
+                byteBuffer.putFloat(obj.getX());
+                byteBuffer.putFloat(obj.getY());
+            }
+
+            outputStream.write(byteBuffer.array());
+            outputStream.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public int getPosX(){

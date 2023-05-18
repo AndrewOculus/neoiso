@@ -496,7 +496,6 @@ public class MapGenerator {
                         byteBuffer.putInt(objs.get(j).getObjectType().getObjectId());
                         byteBuffer.putFloat(objs.get(j).getX());
                         byteBuffer.putFloat(objs.get(j).getY());
-
                     }
             }
 

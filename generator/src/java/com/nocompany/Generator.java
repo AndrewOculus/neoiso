@@ -71,9 +71,49 @@ public class Generator {
         correctGridsCells( grids, settings, random );
         correctGridsCells( grids, settings, random  );
         setCellsType( grids, random, settings );
+        makeMapObjects( grids, random, settings );
+    }
 
-        // correctGrids( grids, settings );
-        // makeModesGrids( grids, settings, random );
+    static void makeMapObjects( HashMap<String, Grid> gridsHashMap, Random random, Settings settings ){
+
+        System.out.println("Generate trees and other begin");
+
+        for(Map.Entry<String, Grid> entry : gridsHashMap.entrySet()) {
+
+            Grid grid = entry.getValue();
+            int objsAndTreesSize = 0;
+            int objsAndTreesCount = 0;
+            ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+
+            for (int x = 0; x < settings.gridSizeX; x++) {
+                for (int y = 0; y < settings.gridSizeY; y++) {
+
+                    int xx = x * 32;
+                    int yy = y * 32;
+
+                    boolean isWater = false;
+
+                    int tile = grid.getCellLocal(x, y);
+                    short first = TilesUtil.getFirstTileType(tile);
+
+                    if( first == Cell.WATER.getTileId() || first == Cell.WATER_DEEP.getTileId() ){
+                        isWater = true;
+                    }
+                    
+                    if( !isWater )
+                    if (random.nextInt(1000 - 0) + 0 > 995) {
+                        gameObjects.add(new GameObject( GameObjectTypes.getRandomType(random).getObjectId(), (float)xx, (float)yy)); // (float)x + (float)random.nextDouble() , (float)y +  (float)random.nextDouble() ));
+                    }
+                }
+            }
+
+            grid.addObject(gameObjects);
+            grid.storeObjects();
+
+            System.out.println(gameObjects.size());
+        }
+
+        System.out.println("Generate trees and other stop");
     }
 
     static void loadTilesDisposer( String path, Settings settings ){
@@ -663,7 +703,6 @@ public class Generator {
             grid.drop();
         }
     }
-
 
     static void correctGrids( HashMap<String, Grid> gridsHashMap, Settings settings ){
         System.out.println("Correct grids");

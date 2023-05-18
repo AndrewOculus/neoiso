@@ -11,6 +11,7 @@ import com.nocompany.iso.net.NetworkManager;
 import com.nocompany.iso.net.NetworkMessage;
 import com.nocompany.iso.objects.SceneObject;
 import com.nocompany.iso.utils.AssetLoader;
+import com.nocompany.iso.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,21 +121,12 @@ public class MapTileGroup implements Disposable {
 
         if(atlas == null && !isBaked) {
             baker.bakeAsync(this);
+            MiniMap.getInstance().asyncBakeToMap(this);
             isBaked = true;
         }
 
         if(atlas != null)
             spriteBatch.draw(atlas, x, y, Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH, Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT );
-
-//            spriteBatch.draw(atlas, x - Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH /2, y  , Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH, Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT );
-		// AssetLoader.GetInstance().waterShader.begin();
-		// AssetLoader.GetInstance().waterShader.setUniformi("use", 0);
-		// AssetLoader.GetInstance().waterShader.end();
-
-
-        // AssetLoader.GetInstance().waterShader.begin();
-		// AssetLoader.GetInstance().waterShader.setUniformi("use", 1);
-		// AssetLoader.GetInstance().waterShader.end();
 
         this.lastUpdate = TimeUtils.millis();
     }
@@ -217,30 +209,10 @@ public class MapTileGroup implements Disposable {
         float inTileX = x2d - ( trueX * Settings.TILE_HEIGHT * Settings.GRID_TILES_HEIGHT + Settings.TILE_HEIGHT * Settings.GRID_TILES_HEIGHT/2 );
         float inTileY = y2d - ( trueY * Settings.TILE_HEIGHT * Settings.GRID_TILES_HEIGHT - Settings.TILE_HEIGHT * Settings.GRID_TILES_HEIGHT/2 );
 
-//        System.out.println("inTileX inTileY " + x2d + " " + y2d + " " + trueX * Settings.TILE_HEIGHT * Settings.GRID_TILES_HEIGHT + " " + trueY * Settings.TILE_HEIGHT * Settings.GRID_TILES_HEIGHT);
-
         int xTile = (int)( inTileX / Settings.TILE_HEIGHT );
         int yTile = (int)( inTileY / Settings.TILE_HEIGHT );
 
         System.out.println( inTileX + " " + inTileY + " : " + xTile + " " + yTile);
-
-
-//        if( tiles != null ) {
-//            System.out.println("========");
-//
-//            for (int i = 0; i < 16; i++) {
-//                for (int j = 0; j < 16; j++) {
-//                    if( i == xTile && j == yTile ){
-//                        System.out.print(-1 + "\t");
-//                    }else{
-//                        System.out.print((tiles.getTile(j, i) >> 28 & 0x0000000f) + "\t");
-//                    }
-//                }
-//                System.out.println("");
-//            }
-//            System.out.println("========");
-//        }
-
 
         if( tiles != null )
             return tiles.getTile( Settings.GRID_TILES_HEIGHT - xTile - 1, Settings.GRID_TILES_HEIGHT - yTile - 1  );

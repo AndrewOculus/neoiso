@@ -20,6 +20,6 @@ public class Settings {
     public final static int FRAMES_PER_BAKE = 2;
 
     public final static float SORT_UPDATE = 0.2f;
-    public final static int TIME_TO_DISPOSE = 5000;
+    public final static int TIME_TO_DISPOSE = 1000;
 
 }

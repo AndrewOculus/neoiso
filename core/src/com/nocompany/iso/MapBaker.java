@@ -32,6 +32,7 @@ public class MapBaker {
 
     private FrameBuffer tilesFrameBuffer;
     private FrameBuffer waterTilesFrameBuffer;
+    private FrameBuffer miniMapTilesFrameBuffer;
     private SpriteBatch spriteBatch;
     private OrthographicCamera bakerCamera;
 
@@ -262,6 +263,8 @@ public class MapBaker {
             return null;
         }
 
+        miniMapTilesFrameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, (int)(Settings.GRID_TILES_WIDTH), (int)(Settings.GRID_TILES_HEIGHT), false);
+
 //        times += TimeUtils.millis() - timeMillis;
 //        nums += 1;
 
@@ -271,8 +274,6 @@ public class MapBaker {
 //            nums = 0;
 //            times = 0;
 //        }
-
-
 
         Texture texture = waterTilesFrameBuffer.getColorBufferTexture();
 
