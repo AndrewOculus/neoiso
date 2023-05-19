@@ -14,7 +14,8 @@ public enum GameObjectTypes {
     WILLOW(7),
     YEW(8),
     STONE(9),
-    FERN(10);
+    FERN(10),
+    MBERRY(11);
 
     private static final Random random = new Random(Settings.SEED);
 

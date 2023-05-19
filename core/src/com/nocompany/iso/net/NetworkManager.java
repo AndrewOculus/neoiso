@@ -179,16 +179,19 @@ public class NetworkManager implements Runnable {
                     }
 
                     List<SceneObject> sceneObjectList = new ArrayList<>();
+                    try{
+                        for( int i = 0 ; i < objectsCount ; i++){
 
-                    for( int i = 0 ; i < objectsCount ; i++){
+                            int type = objectsBytesBuffer.getInt();
+                            float xxx = objectsBytesBuffer.getFloat();
+                            float yyy = objectsBytesBuffer.getFloat();
 
-                        int type = objectsBytesBuffer.getInt();
-                        float xxx = objectsBytesBuffer.getFloat();
-                        float yyy = objectsBytesBuffer.getFloat();
+                            System.out.println("type: " + type + " " + xxx + " " + yyy);
 
-                        System.out.println("type: " + type + " " + xxx + " " + yyy);
-
-                        sceneObjectList.add(new GameObject(xxx, yyy, GameObjectTypes.values()[type]));
+                            sceneObjectList.add(new GameObject(xxx, yyy, GameObjectTypes.values()[type]));
+                        }
+                    }catch(Exception e){
+                        
                     }
 
                     objects.put(String.format("%d_%d", networkMessage.x, networkMessage.y), sceneObjectList);

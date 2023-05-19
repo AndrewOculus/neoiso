@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.nocompany.iso.objects.AnimateObject;
 import com.nocompany.iso.tiles.*;
 import com.nocompany.iso.utils.AssetLoader;
+import com.nocompany.iso.objects.*;
 
 import java.util.ArrayList;
 import java.util.ArrayDeque;
@@ -225,6 +226,42 @@ public class MapBaker {
                 }
             }
         }
+        spriteBatch.end();
+        tilesFrameBuffer.end();
+
+
+        tilesFrameBuffer.begin();
+        spriteBatch.setProjectionMatrix(bakerCamera.combined);
+        spriteBatch.enableBlending();
+        spriteBatch.begin();
+
+        for (int j = 2; j < tiles.getWidth() - 2; j++) {
+            for (int i = 2; i < tiles.getHeight() - 2; i++) {
+                if (ThreadLocalRandom.current().nextInt(0, 600) < 6) {
+                    int currentTile = tiles.getTile(j, i);
+                    short firstTile = (short) (currentTile  >> 28   & 0x0000000f);
+
+                    DecalTypes dec = DecalTypes.getDecalById(firstTile);
+                    if( dec.getDecalCount() != 0 ){
+                        float x = i * Settings.TILE_HEIGHT  - j * Settings.TILE_HEIGHT ;
+                        float y = (i * Settings.TILE_HEIGHT  + j * Settings.TILE_HEIGHT ) / 2;
+                        TextureRegion decRegion = AssetLoader.GetInstance().getDecal(dec, ThreadLocalRandom.current().nextInt(1, dec.getDecalCount()) );
+
+                        if(decRegion!=null){
+                            spriteBatch.draw(decRegion, x, y, 0.5f, 0.5f, decRegion.getRegionWidth(), decRegion.getRegionHeight(), 1.0f, -1.0f, 0.0f );
+                        }
+
+
+
+//                         draw(TextureRegion region, float x, float y,
+// float originX, float originY, float width, float height,
+// float scaleX, float scaleY, float rotation)
+                    }
+                }
+            }
+        }
+
+
         spriteBatch.end();
         tilesFrameBuffer.end();
 

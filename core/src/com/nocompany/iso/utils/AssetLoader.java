@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
-// import com.nocompany.iso.objects.GameObject;
+import com.nocompany.iso.objects.DecalTypes;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.nocompany.iso.objects.GameObjectTypes;
 import com.nocompany.iso.objects.GameObjectsPack;
@@ -127,16 +127,17 @@ public class AssetLoader implements Disposable {
 
 		gameObjectsPackHashMap = new HashMap<>();
 
+		gameObjectsPackHashMap.put(GameObjectTypes.ATREE.getName(), new GameObjectsPack("trees/atree"));
+		gameObjectsPackHashMap.put(GameObjectTypes.BIRCH.getName(), new GameObjectsPack("trees/birch"));
+		gameObjectsPackHashMap.put(GameObjectTypes.ELM.getName(), new GameObjectsPack("trees/elm"));
+		gameObjectsPackHashMap.put(GameObjectTypes.FIR.getName(), new GameObjectsPack("trees/fir"));
+		gameObjectsPackHashMap.put(GameObjectTypes.OAK.getName(), new GameObjectsPack("trees/oak"));
+		gameObjectsPackHashMap.put(GameObjectTypes.PINE.getName(), new GameObjectsPack("trees/pine"));
 		gameObjectsPackHashMap.put(GameObjectTypes.FERN.getName(), new GameObjectsPack("trees/fern"));
 		gameObjectsPackHashMap.put(GameObjectTypes.STONE.getName(), new GameObjectsPack("trees/stone"));
-		gameObjectsPackHashMap.put(GameObjectTypes.ATREE.getName(), new GameObjectsPack("trees/atree"));
-//		gameObjectsPackHashMap.put(GameObjectTypes.BIRCH.getName(), new GameObjectsPack("trees/birch"));
-//		gameObjectsPackHashMap.put(GameObjectTypes.ELM.getName(), new GameObjectsPack("trees/elm"));
-		gameObjectsPackHashMap.put(GameObjectTypes.FIR.getName(), new GameObjectsPack("trees/fir"));
-//		gameObjectsPackHashMap.put(GameObjectTypes.OAK.getName(), new GameObjectsPack("trees/oak"));
-		gameObjectsPackHashMap.put(GameObjectTypes.PINE.getName(), new GameObjectsPack("trees/pine"));
-//		gameObjectsPackHashMap.put(GameObjectTypes.WILLOW.getName(), new GameObjectsPack("trees/willow"));
-//		gameObjectsPackHashMap.put(GameObjectTypes.YEW.getName(), new GameObjectsPack("trees/yew"));
+        gameObjectsPackHashMap.put(GameObjectTypes.MBERRY.getName(), new GameObjectsPack("trees/mberry"));
+		gameObjectsPackHashMap.put(GameObjectTypes.WILLOW.getName(), new GameObjectsPack("trees/willow"));
+		// gameObjectsPackHashMap.put(GameObjectTypes.YEW.getName(), new GameObjectsPack("trees/yew"));
 
 //		texture = new Texture(Gdx.files.internal("tiles/moor/base_9.png"));
 //		texture1 = new Texture(Gdx.files.internal("tiles/moor/base_1.png"));
@@ -158,6 +159,7 @@ public class AssetLoader implements Disposable {
 		manager.load("tiles_atlases/water.atlas", TextureAtlas.class);
 		manager.load("tiles_atlases/grass.atlas", TextureAtlas.class);
 		manager.load("tiles_atlases/wald.atlas", TextureAtlas.class);
+        manager.load("decal/decal.atlas", TextureAtlas.class);
 		manager.finishLoading();
 
 
@@ -214,6 +216,11 @@ public class AssetLoader implements Disposable {
 	public Texture getGameObjectsPackShadows(GameObjectTypes gameObjectTypes){
 		return gameObjectsPackHashMap.get(gameObjectTypes.getName()).getGameObjectShadow();
 	}
+
+    public TextureRegion getDecal( DecalTypes dec, int num ){
+        TextureAtlas atl = manager.get("decal/decal.atlas");
+        return atl.findRegion(dec.getName(), num);
+    }
 
 	public TextureRegion getTextureByNumberAtlases( TextureAtlas cellsPack, short tile ){
 

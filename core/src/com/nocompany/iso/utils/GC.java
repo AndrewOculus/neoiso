@@ -35,7 +35,7 @@ public class GC {
             if(TimeUtils.millis() - lastUpdate > Settings.TIME_TO_DISPOSE){
                 tileGroup.dispose();
                 stringTileGroupHashMap.remove(key);
-                System.out.println("Size " + stringTileGroupHashMap.size());
+                // System.out.println("Size " + stringTileGroupHashMap.size());
             }
 
             iter++;

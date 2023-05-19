@@ -98,8 +98,8 @@ public class Iso extends ApplicationAdapter {
 		touchController = TouchController.getInstance();
 
 		Preferences preferences = Gdx.app.getPreferences("savestore");
-		animalTestMove.setX( 0) ;//63760.68f );//35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
-		animalTestMove.setY( 0);//66744.42f );//5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
+		animalTestMove.setX(46902.047f) ;//63760.68f );//35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
+		animalTestMove.setY( 27539.504f);//66744.42f );//5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
 		preferences.flush();
 
 		System.out.println("===============================");
