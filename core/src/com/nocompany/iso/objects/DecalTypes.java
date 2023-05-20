@@ -2,20 +2,20 @@ package com.nocompany.iso.objects;
 
 public enum DecalTypes{
         
-    EMPTY(0, 0, "empty"),
-    CLAY(1, 0, "empty"),
-    FEN(2, 9, "fen"),
-    PRAIRIE(3, 0, "empty"),
-    LEAF(4, 0, "empty"),
-    FOREST_PINE(5, 0, "empty"),
-    SWAMP( 6, 9 , "swamp"),
-    HEARTH(7, 4, "heath"),
-    MOOR(8, 12, "moor"),
-    SAND(9, 0, "empty"),
-    WATER(10, 0, "empty"),
-    WATER_DEEP(11, 0, "empty"),
-    GRASS (12, 0, "empty"),
-    WALD(13, 0, "wald");
+    EMPTY       (0, 0, "empty"),
+    CLAY        (1, 0, "empty"),
+    FEN         (2, 10, "wald"),
+    PRAIRIE     (3, 0, "empty"),
+    LEAF        (4, 0, "wald"),
+    FOREST_PINE (5, 0, "empty"),
+    SWAMP       (6, 5 , "swamp"),
+    HEARTH      (7, 7, "heath"),
+    MOOR        (8, 12, "moor"),
+    SAND        (9, 0, "empty"),
+    WATER       (10, 0, "empty"),
+    WATER_DEEP  (11, 0, "empty"),
+    GRASS       (12, 0, "empty"),
+    WALD        (13, 0, "wald");
 
 
     private int id;

@@ -157,6 +157,18 @@ public class MapBaker {
                         tileGroup.addObject(new AnimateObject( tileGroup.getX() + x + Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH /2 , tileGroup.getY() - y + Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT ));
                     }
 
+                    if( firstTile == CellType.FEN.getTileId() && (ThreadLocalRandom.current().nextInt(0, 40) < 4) ){
+                        TextureRegion decRegion = AssetLoader.GetInstance().getDecal(DecalTypes.FEN, ThreadLocalRandom.current().nextInt(1, DecalTypes.FEN.getDecalCount()) );
+                        if(decRegion != null)
+                        tileGroup.addObject(new DecalObject( tileGroup.getX() + x + Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH /2 , tileGroup.getY() - y + Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT , decRegion));
+                    }
+
+                    if( firstTile == CellType.MOOR.getTileId() && (ThreadLocalRandom.current().nextInt(0, 40) < 4) ){
+                        TextureRegion decRegion = AssetLoader.GetInstance().getDecal(DecalTypes.FEN, ThreadLocalRandom.current().nextInt(1, DecalTypes.FEN.getDecalCount()) );
+                        if(decRegion != null)
+                        tileGroup.addObject(new DecalObject( tileGroup.getX() + x + Settings.GRID_TILES_WIDTH * Settings.TILE_WIDTH /2 , tileGroup.getY() - y + Settings.GRID_TILES_HEIGHT * Settings.TILE_HEIGHT , decRegion));
+                    }
+
                     if(cellsPack != null) {
                         TextureRegion texture = AssetLoader.GetInstance().getTextureByNumberAtlases(cellsPack, firstTileType);
                         spriteBatch.draw(texture, x, y);
@@ -237,11 +249,20 @@ public class MapBaker {
 
         for (int j = 2; j < tiles.getWidth() - 2; j++) {
             for (int i = 2; i < tiles.getHeight() - 2; i++) {
-                if (ThreadLocalRandom.current().nextInt(0, 600) < 6) {
+                if (ThreadLocalRandom.current().nextInt(0, 600) < 50) {
                     int currentTile = tiles.getTile(j, i);
                     short firstTile = (short) (currentTile  >> 28   & 0x0000000f);
 
                     DecalTypes dec = DecalTypes.getDecalById(firstTile);
+
+                    if(dec.getDecalId() != DecalTypes.HEARTH.getDecalId()){
+                        if (ThreadLocalRandom.current().nextInt(0, 600) < 50){
+                            continue;
+                        }
+                    }
+
+                    if(dec.getDecalId() != DecalTypes.MOOR.getDecalId())
+                    if( dec.getDecalId() != DecalTypes.FEN.getDecalId())
                     if( dec.getDecalCount() != 0 ){
                         float x = i * Settings.TILE_HEIGHT  - j * Settings.TILE_HEIGHT ;
                         float y = (i * Settings.TILE_HEIGHT  + j * Settings.TILE_HEIGHT ) / 2;

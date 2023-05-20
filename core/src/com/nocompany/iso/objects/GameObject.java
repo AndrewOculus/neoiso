@@ -72,7 +72,7 @@ public class GameObject implements SceneObject {
 
     @Override
     public float getZ() {
-        return (y + x)/2.0f;
+        return (y + x)/2.0f - shadow.getHeight()/2;
     }
 
     @Override

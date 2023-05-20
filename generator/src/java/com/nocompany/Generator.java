@@ -56,19 +56,20 @@ public class Generator {
 
         Mixer mixer = new Mixer(
             new GlobalLayer[]{
-                new GlobalLayer(Cell.LEAF, true),
+                new GlobalLayer(Cell.WALD, true),
                 new GlobalLayer(Cell.HEARTH, settings.seed + 0, 700.0f, 0.61f),
                 new GlobalLayer(Cell.CLAY, settings.seed + 1,   100.0f, 0.71f),
-                new GlobalLayer(Cell.MOOR, settings.seed + 2,   100.0f, 0.61f),
                 new GlobalLayer(Cell.FEN, settings.seed + 3,   400.0f, 0.71f),
-                new GlobalLayer(Cell.WALD, settings.seed + 4,   450.0f, 0.55f),
+                new GlobalLayer(Cell.LEAF, settings.seed + 4,   450.0f, 0.55f),
                 new GlobalLayer(Cell.GRASS, settings.seed + 5,   200.0f, 0.61f),
+                new GlobalLayer(Cell.MOOR, settings.seed + 2,   100.0f, 0.61f),
             }
         );
         
         makeGrids( grids, random, settings, mixer );
         makeSandAndRiversAndLakes( grids, random, settings );
         correctGridsCells( grids, settings, random );
+        correctGridsCells( grids, settings, random  );
         correctGridsCells( grids, settings, random  );
         setCellsType( grids, random, settings );
         makeMapObjects( grids, random, settings );
