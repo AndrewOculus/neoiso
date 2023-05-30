@@ -47,12 +47,12 @@ public class DecalObject implements SceneObject {
 
     @Override
     public float getY() {
-        return y - textureRegion.getRegionHeight()/2;
+        return y;
     }
 
     @Override
     public float getZ() {
-        return y;
+        return y - 0.25f * textureRegion.getRegionHeight();
     }
 
     @Override

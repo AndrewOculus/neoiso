@@ -34,7 +34,7 @@ public class Iso extends ApplicationAdapter {
 
 	OrthographicCamera camera;
 	HashMap<String, MapTileGroup> tileGroupsHash;
-	int[] dir = { -2, -1, 0, 1, 2 };
+	int[] dir = {-3, -2, -1, 0, 1, 2, 3 };
 	TilesFactory factory;
 	ObjectsRenderer objectsRenderer;
 	NetworkMove networkMove;
@@ -98,8 +98,8 @@ public class Iso extends ApplicationAdapter {
 		touchController = TouchController.getInstance();
 
 		Preferences preferences = Gdx.app.getPreferences("savestore");
-		animalTestMove.setX(0f);//65109.414f) ;//63760.68f );//35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
-		animalTestMove.setY(0f);//13937.43f);//66744.42f );//5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
+		animalTestMove.setX(15104.772f);//65109.414f) ;//63760.68f );//35104.613f );//preferences.getFloat("HeroX", animalTestMove.getX()));
+		animalTestMove.setY(2122.336f);//13937.43f);//66744.42f );//5836.0884f);//preferences.getFloat("HeroY", animalTestMove.getY()));
 		preferences.flush();
 
 		System.out.println("===============================");
